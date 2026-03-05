@@ -1,0 +1,48 @@
+<div class="admin-container">
+  <section class="form-section">
+    <h2>{{ editingProjectId() ? 'Edit Project' : 'Add New Project' }}</h2>
+
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <input formControlName="name" placeholder="Project Name *">
+        <input formControlName="platform" placeholder="Platform *">
+      </div>
+
+      <div class="form-row">
+        <input formControlName="genre" placeholder="Genre">
+        <input formControlName="downloads" placeholder="Downloads">
+      </div>
+
+      <div class="form-row">
+        <input formControlName="videoUrl" placeholder="Video URL (e.g., YouTube)">
+        <input formControlName="marketLink" placeholder="Store URL (e.g., Google Play)">
+      </div>
+
+      <textarea formControlName="description" placeholder="Short description..." rows="4"></textarea>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="projectForm.invalid || isSubmitting">
+          {{ editingProjectId() ? 'Update Project' : 'Save Project' }}
+        </button>
+        <button type="button" class="btn-cancel" *ngIf="editingProjectId()" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <section class="list-section">
+    <h2>Manage Projects</h2>
+    <div class="admin-list">
+      <div class="admin-card" *ngFor="let p of projects()">
+        <div class="info">
+          <strong>{{ p.name }}</strong> ({{ p.platform }})
+        </div>
+        <div class="actions">
+          <button class="btn-edit" (click)="editProject(p)">Edit</button>
+          <button class="btn-delete" (click)="deleteProject(p.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

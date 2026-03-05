@@ -1,0 +1,58 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+.login-box {
+  background: var(--surface);
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+
+  h2 { margin-top: 0; color: var(--text-main); }
+  p { color: var(--secondary); margin-bottom: 2rem; }
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left;
+
+  input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    margin-top: 0.25rem;
+    font-size: 1rem;
+
+    &:focus { outline: none; border-color: var(--primary); }
+  }
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  // Використовуємо transition для плавного ефекту
+  transition: opacity 0.2s, filter 0.2s;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

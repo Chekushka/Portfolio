@@ -9,11 +9,50 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="80acd1a8-87a4-420e-82e7-4ee30c16b3cc" name="Changes" comment="" />
+    <list default="true" id="80acd1a8-87a4-420e-82e7-4ee30c16b3cc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/.idea/.idea.Portfolio-Client.dir/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/.idea/.idea.Portfolio-Client.dir/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/.idea/.idea.Portfolio-Client.dir/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Controllers/ProjectController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Data/AppDbContext.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Models/Project.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Portfolio/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Portfolio/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/.tsbuildinfo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_core.js" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_core.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_platform-browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_platform-browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-2M4UMX5N.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-2M4UMX5N.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-Z6CVJKLE.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-Z6CVJKLE.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/Portfolio.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Portfolio.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Program.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Portfolio/Api/Controllers/ProjectController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Portfolio/Api/Models/Project.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Portfolio/Program.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -33,6 +72,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -93,14 +133,30 @@
       <updated>1772437364045</updated>
       <workItem from="1772437371242" duration="1088000" />
       <workItem from="1772439546556" duration="1188000" />
-      <workItem from="1772443144230" duration="2321000" />
+      <workItem from="1772443144230" duration="4720000" />
+      <workItem from="1772453446409" duration="25000" />
+      <workItem from="1772628452088" duration="3075000" />
+      <workItem from="1772694977213" duration="1816000" />
+      <workItem from="1772696944467" duration="6686000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>

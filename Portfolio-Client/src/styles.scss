@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global CSS variables */
+:root {
+  --primary: #2563eb;       // Blue
+  --secondary: #64748b;     // Gray
+  --background: #f8fafc;    // Light gray background
+  --surface: #ffffff;       // White cards
+  --text-main: #0f172a;     // Dark text
+  --danger: #ef4444;        // Red for delete
+  --warning: #f59e0b;       // Orange/Yellow for edit
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+  background-color: var(--background);
+  color: var(--text-main);
+}
+
+* {
+  box-sizing: border-box;
+}
