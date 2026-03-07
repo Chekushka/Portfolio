@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { ProjectService } from '../../services/project.service';
+import { ProfileService } from '../../services/profile.service';
 
 @Component({
   selector: 'app-admin',
@@ -12,12 +13,23 @@ import { ProjectService } from '../../services/project.service';
 })
 export class AdminComponent implements OnInit {
   private projectService = inject(ProjectService);
+  private profileService = inject(ProfileService);
 
   projects = signal<any[]>([]);
   editingProjectId = signal<number | null>(null);
-  isSubmitting = false;
+  isSubmittingProject = false;
+  isSubmittingProfile = false;
 
   // Extended form with new fields for the portfolio
+  profileForm = new FormGroup({
+    name: new FormControl('', Validators.required),
+    role: new FormControl('', Validators.required),
+    bio: new FormControl(''),
+    photoUrl: new FormControl(''),
+    cvUrl: new FormControl(''),
+    email: new FormControl('', Validators.email)
+  });
+
   projectForm = new FormGroup({
     name: new FormControl('', Validators.required),
     platform: new FormControl('Google Play', Validators.required),
@@ -25,11 +37,13 @@ export class AdminComponent implements OnInit {
     downloads: new FormControl('0'),
     description: new FormControl(''),
     videoUrl: new FormControl(''),
+    previewImageUrl: new FormControl(''),
     marketLink: new FormControl('')
   });
 
   ngOnInit(): void {
     this.loadProjects();
+    this.loadProfile();
   }
 
   loadProjects() {
@@ -39,10 +53,32 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    if (this.projectForm.invalid || this.isSubmitting) return;
+  loadProfile() {
+    this.profileService.getProfile().subscribe({
+      next: (data) => {
+        if (data) this.profileForm.patchValue(data);
+      },
+      error: (err) => console.error('Failed to load profile', err)
+    });
+  }
 
-    this.isSubmitting = true;
+  onProfileSubmit() {
+    if (this.profileForm.invalid || this.isSubmittingProfile) return;
+    this.isSubmittingProfile = true;
+
+    this.profileService.updateProfile(this.profileForm.value).subscribe({
+      next: () => {
+        alert('Profile updated successfully!');
+        this.isSubmittingProfile = false;
+      },
+      error: () => this.isSubmittingProfile = false
+    });
+  }
+
+  onSubmit() {
+    if (this.projectForm.invalid || this.isSubmittingProject) return;
+
+    this.isSubmittingProject = true;
     const id = this.editingProjectId();
     const projectData = { ...this.projectForm.value, id: id };
 
@@ -52,9 +88,9 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.projects.update(items => items.map(p => p.id === id ? projectData : p));
           this.cancelEdit();
-          this.isSubmitting = false;
+          this.isSubmittingProject = false;
         },
-        error: () => this.isSubmitting = false
+        error: () => this.isSubmittingProject = false
       });
     } else {
       // Create new project
@@ -62,9 +98,9 @@ export class AdminComponent implements OnInit {
         next: (newProject) => {
           this.projects.update(items => [...items, newProject]);
           this.cancelEdit();
-          this.isSubmitting = false;
+          this.isSubmittingProject = false;
         },
-        error: () => this.isSubmitting = false
+        error: () => this.isSubmittingProject = false
       });
     }
   }

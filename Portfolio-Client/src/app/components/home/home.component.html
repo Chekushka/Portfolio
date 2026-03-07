@@ -1,31 +1,49 @@
-<div class="home-container">
-  <header class="hero-section">
-    <h1>Hello, I'm a Software & Game Developer</h1>
-    <p>Welcome to my personal portfolio. Here you can find my latest projects.</p>
-  </header>
+<div class="portfolio-wrapper">
 
-  <section class="projects-section">
-    <h2>My Projects</h2>
+  <div class="score-tracker">
+    <span>🪙 Coins: {{ gameScore() }}</span>
+  </div>
+  <div class="global-coin"
+       [style.top]="coinPosition().top"
+       [style.left]="coinPosition().left"
+       (click)="catchCoin()">
+  </div>
 
-    <div *ngIf="projects().length === 0" class="no-data">
-      <p>No projects available at the moment.</p>
-    </div>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Hi, I'm {{ profile().name }}</h1>
+      <h2 class="accent-text">{{ profile().role }}</h2>
+      <p>{{ profile().bio }}</p>
 
-    <div class="project-grid">
-      <div class="project-card" *ngFor="let p of projects()">
-        <div class="card-content">
-          <h3>{{ p.name }}</h3>
-          <p class="genre"><strong>Genre:</strong> {{ p.genre || 'N/A' }}</p>
-          <p class="platform"><strong>Platform:</strong> <span>{{ p.platform }}</span></p>
-          <p class="downloads"><strong>Downloads:</strong> {{ p.downloads }}</p>
-          <p class="description">{{ p.description }}</p>
-
-          <div class="card-links">
-            <a *ngIf="p.marketLink" [href]="p.marketLink" target="_blank" rel="noopener noreferrer" class="btn-link">Store</a>
-            <a *ngIf="p.videoUrl" [href]="p.videoUrl" target="_blank" rel="noopener noreferrer" class="btn-link">Watch Video</a>
-          </div>
-        </div>
+      <div class="action-buttons">
+        <a *ngIf="profile().cvUrl" [href]="profile().cvUrl" target="_blank" class="btn-primary">Download CV</a>
+        <a *ngIf="profile().email" [href]="'mailto:' + profile().email" class="btn-secondary">Get in Touch</a>
       </div>
     </div>
+
+    <div class="hero-visual">
+      <img *ngIf="profile().photoUrl" [src]="profile().photoUrl" alt="Profile Photo" class="profile-img">
+    </div>
   </section>
+
+  <section class="projects">
+    <h2>Selected Works</h2>
+    <div class="grid">
+      @for (p of projects(); track p.id) {
+      <div class="card" (click)="openProject(p)">
+        <div class="card-image">
+          <img [src]="p.previewImageUrl || 'https://placehold.co/600x400/eee/999?text=No+Image'" alt="Preview">
+          <div class="overlay">
+            <span>View Details</span>
+          </div>
+        </div>
+        <div class="card-info">
+          <h3>{{ p.name }}</h3>
+            <span class="genre">{{ p.genre }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
 </div>

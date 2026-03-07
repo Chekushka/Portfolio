@@ -1,27 +1,41 @@
 <div class="admin-container">
+
+  <section class="form-section">
+    <h2>Profile Settings</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
+      <div class="form-row">
+        <input formControlName="name" placeholder="Your Name *">
+        <input formControlName="role" placeholder="Your Role (e.g., Unity Developer) *">
+      </div>
+      <div class="form-row">
+        <input formControlName="email" placeholder="Contact Email">
+        <input formControlName="cvUrl" placeholder="Link to CV (Google Drive/PDF)">
+      </div>
+      <div class="form-row">
+        <input formControlName="photoUrl" placeholder="Link to Profile Photo">
+      </div>
+      <textarea formControlName="bio" placeholder="Short Bio about yourself..." rows="3"></textarea>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="profileForm.invalid || isSubmittingProfile">
+          Save Profile Settings
+        </button>
+      </div>
+    </form>
+  </section>
+
   <section class="form-section">
     <h2>{{ editingProjectId() ? 'Edit Project' : 'Add New Project' }}</h2>
-
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
-        <input formControlName="name" placeholder="Project Name *">
-        <input formControlName="platform" placeholder="Platform *">
-      </div>
-
-      <div class="form-row">
-        <input formControlName="genre" placeholder="Genre">
-        <input formControlName="downloads" placeholder="Downloads">
-      </div>
-
-      <div class="form-row">
-        <input formControlName="videoUrl" placeholder="Video URL (e.g., YouTube)">
-        <input formControlName="marketLink" placeholder="Store URL (e.g., Google Play)">
+        <input formControlName="previewImageUrl" placeholder="Preview Image URL (.jpg, .png)">
+        <input formControlName="videoUrl" placeholder="Direct Video URL (.mp4)">
       </div>
 
       <textarea formControlName="description" placeholder="Short description..." rows="4"></textarea>
 
       <div class="form-actions">
-        <button type="submit" [disabled]="projectForm.invalid || isSubmitting">
+        <button type="submit" [disabled]="projectForm.invalid || isSubmittingProject">
           {{ editingProjectId() ? 'Update Project' : 'Save Project' }}
         </button>
         <button type="button" class="btn-cancel" *ngIf="editingProjectId()" (click)="cancelEdit()">
@@ -32,17 +46,5 @@
   </section>
 
   <section class="list-section">
-    <h2>Manage Projects</h2>
-    <div class="admin-list">
-      <div class="admin-card" *ngFor="let p of projects()">
-        <div class="info">
-          <strong>{{ p.name }}</strong> ({{ p.platform }})
-        </div>
-        <div class="actions">
-          <button class="btn-edit" (click)="editProject(p)">Edit</button>
-          <button class="btn-delete" (click)="deleteProject(p.id)">Delete</button>
-        </div>
-      </div>
-    </div>
   </section>
 </div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Portfolio.Api.Data;
 using Portfolio.Api.Models;
@@ -23,6 +24,7 @@ public class ProjectController : ControllerBase
         return Ok(projects);
     }
     
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> AddProject([FromBody] Project project)
     {
@@ -32,25 +34,24 @@ public class ProjectController : ControllerBase
         return CreatedAtAction(nameof(GetProjects), new { id = project.Id }, project);
     }
     
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteProject(int id)
     {
-        // Шукаємо проєкт у базі за його ID
         var project = await _context.Projects.FindAsync(id);
-
-        // Якщо не знайшли — повертаємо 404
+        
         if (project == null)
         {
             return NotFound();
         }
-
-        // Видаляємо об'єкт із контексту та зберігаємо зміни
+        
         _context.Projects.Remove(project);
         await _context.SaveChangesAsync();
 
         return NoContent(); // Статус 204
     }
     
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateProject(int id, [FromBody] Project updatedProject)
     {

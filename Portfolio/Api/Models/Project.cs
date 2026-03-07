@@ -10,4 +10,5 @@ public class Project
     public string Downloads { get; set; } = "0";
     public string? VideoUrl { get; set; }
     public string? MarketLink { get; set; }
+    public string? PreviewImageUrl { get; set; }
 }

@@ -1,21 +1,16 @@
-/* Global CSS variables */
 :root {
-  --primary: #2563eb;       // Blue
-  --secondary: #64748b;     // Gray
-  --background: #f8fafc;    // Light gray background
-  --surface: #ffffff;       // White cards
-  --text-main: #0f172a;     // Dark text
-  --danger: #ef4444;        // Red for delete
-  --warning: #f59e0b;       // Orange/Yellow for edit
+  --bg-color: #fafafa;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --accent: #10b981;
+  --accent-hover: #059669;
+  --card-bg: #ffffff;
 }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
-  background-color: var(--background);
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--bg-color);
   color: var(--text-main);
-}
-
-* {
-  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }

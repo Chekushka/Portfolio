@@ -3,8 +3,14 @@
     <a routerLink="/" class="logo">My Portfolio</a>
     <div class="links">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+
+      @if (authService.isLoggedIn()) {
       <a routerLink="/admin" routerLinkActive="active">Admin Panel</a>
+      <a (click)="logout()" style="cursor: pointer;">Logout</a>
+      }
+      @else {
       <a routerLink="/login" routerLinkActive="active">Login</a>
+      }
     </div>
   </div>
 </nav>

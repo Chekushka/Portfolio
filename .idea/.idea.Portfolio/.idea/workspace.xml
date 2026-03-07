@@ -10,15 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80acd1a8-87a4-420e-82e7-4ee30c16b3cc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Portfolio-Client/.idea/.idea.Portfolio-Client.dir/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio-Client/.idea/.idea.Portfolio-Client.dir/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio-Client/.idea/.idea.Portfolio-Client.dir/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Controllers/ProjectController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Data/AppDbContext.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Models/Project.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/auth.guard.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/auth.interceptor.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/services/auth.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Controllers/AuthController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Controllers/ProfileController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Portfolio/Api/Models/UserProfile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Portfolio/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Portfolio/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/.tsbuildinfo" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/.tsbuildinfo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_core.js" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_core.js" afterDir="false" />
@@ -26,20 +23,25 @@
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/@angular_router.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/_metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-2M4UMX5N.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-2M4UMX5N.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-Z6CVJKLE.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/.angular/cache/21.2.0/Portfolio-Client/vite/deps/chunk-Z6CVJKLE.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/app.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.scss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/app.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/components/admin/admin.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/components/admin/admin.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/components/admin/admin.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/components/admin/admin.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/components/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/components/home/home.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/components/home/home.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/components/home/home.component.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/components/home/home.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/components/home/home.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/app/components/login/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/app/components/login/login.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio-Client/src/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio-Client/src/styles.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Portfolio/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/Api/Controllers/ProjectController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Api/Controllers/ProjectController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/Api/Data/AppDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Api/Data/AppDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/Api/Models/Project.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Api/Models/Project.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/Migrations/AppDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Migrations/AppDbContextModelSnapshot.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio/Portfolio.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Portfolio.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Portfolio/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Portfolio/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Portfolio/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +139,8 @@
       <workItem from="1772453446409" duration="25000" />
       <workItem from="1772628452088" duration="3075000" />
       <workItem from="1772694977213" duration="1816000" />
-      <workItem from="1772696944467" duration="6686000" />
+      <workItem from="1772696944467" duration="6688000" />
+      <workItem from="1772793557436" duration="6724000" />
     </task>
     <servers />
   </component>
