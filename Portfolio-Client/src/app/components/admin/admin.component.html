@@ -28,11 +28,25 @@
     <h2>{{ editingProjectId() ? 'Edit Project' : 'Add New Project' }}</h2>
     <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
       <div class="form-row">
+        <input formControlName="name" placeholder="Project Name *">
+        <input formControlName="genre" placeholder="Genre (e.g., Puzzle, Action)">
+      </div>
+
+      <div class="form-row">
+        <input formControlName="platform" placeholder="Platform (e.g., Google Play, iOS) *">
+        <input formControlName="downloads" placeholder="Downloads count">
+      </div>
+
+      <div class="form-row">
         <input formControlName="previewImageUrl" placeholder="Preview Image URL (.jpg, .png)">
         <input formControlName="videoUrl" placeholder="Direct Video URL (.mp4)">
       </div>
 
-      <textarea formControlName="description" placeholder="Short description..." rows="4"></textarea>
+      <div class="form-row">
+        <input formControlName="marketLink" placeholder="Link to Store (Google Play, App Store, etc.)">
+      </div>
+
+      <textarea formControlName="description" placeholder="Project description..." rows="4"></textarea>
 
       <div class="form-actions">
         <button type="submit" [disabled]="projectForm.invalid || isSubmittingProject">
@@ -46,5 +60,25 @@
   </section>
 
   <section class="list-section">
+    <h2>Projects List</h2>
+    <div class="admin-list">
+      @if (projects().length === 0) {
+        <p class="empty-state">No projects yet. Add your first project above!</p>
+      } @else {
+        @for (project of projects(); track project.id) {
+          <div class="admin-card">
+            <div class="project-info">
+              <h3>{{ project.name }}</h3>
+              <p class="meta">{{ project.genre }} • {{ project.platform }} • {{ project.downloads }} downloads</p>
+              <p class="description">{{ project.description }}</p>
+            </div>
+            <div class="actions">
+              <button class="btn-edit" (click)="editProject(project)">Edit</button>
+              <button class="btn-delete" (click)="deleteProject(project.id)">Delete</button>
+            </div>
+          </div>
+        }
+      }
+    </div>
   </section>
 </div>

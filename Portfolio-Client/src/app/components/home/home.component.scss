@@ -3,6 +3,9 @@
   margin: 0 auto;
   position: relative;
   padding: 2rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border-radius: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
 /* --- Hero Section --- */
@@ -62,7 +65,7 @@
     height: 350px;
     border-radius: 30px;
     object-fit: cover;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    box-shadow: 0 30px 60px rgba(16, 185, 129, 0.2), 0 8px 16px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -119,14 +122,21 @@
 
 .card {
   cursor: pointer;
-  group: hover; // Для активації overlay
+  group: hover;
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-radius: 20px;
+  overflow: hidden;
 
   .card-image {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
     aspect-ratio: 4/3;
-    background: #e5e7eb;
+    background: linear-gradient(135deg, #e5e7eb 0%, #f3f4f6 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    isolation: isolate;
 
     img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
 
@@ -136,6 +146,7 @@
       background: rgba(16, 185, 129, 0.9);
       display: flex;
       align-items: center;
+      border-radius: 20px;
       justify-content: center;
       opacity: 0;
       transition: opacity 0.3s;
@@ -145,13 +156,16 @@
   }
 
   &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     .card-image img { transform: scale(1.05); }
     .card-image .overlay { opacity: 1; }
     .card-image .overlay span { transform: translateY(0); }
   }
 
   .card-info {
-    padding: 1rem 0;
+    padding: 1rem 1.5rem;
+    border-radius: 0 0 20px 20px;
     h3 { margin: 0; font-size: 1.5rem; }
     .genre { color: var(--text-muted); font-size: 0.9rem; }
   }
@@ -161,13 +175,14 @@
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -180,6 +195,8 @@
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease-out;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  margin: auto;
 
   .close-btn {
     position: absolute;

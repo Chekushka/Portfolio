@@ -1,10 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { API_CONFIG } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5177/api/Project';
+  private apiUrl = `${API_CONFIG.baseUrl}/${API_CONFIG.endpoints.project}`;
 
   getProjects() {
     return this.http.get<any[]>(this.apiUrl);

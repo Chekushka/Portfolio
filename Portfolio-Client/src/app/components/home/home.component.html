@@ -46,4 +46,40 @@
     </div>
   </section>
 
+  @if (selectedProject()) {
+  <div class="modal-backdrop" (click)="closeProject()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeProject()">✕</button>
+
+      <div class="video-container" *ngIf="selectedProject().videoUrl">
+        <video [src]="selectedProject().videoUrl" controls></video>
+      </div>
+
+      <img *ngIf="!selectedProject().videoUrl && selectedProject().previewImageUrl"
+           [src]="selectedProject().previewImageUrl"
+           alt="Project Preview"
+           class="modal-fallback-img">
+
+      <div class="modal-details">
+        <h2>{{ selectedProject().name }}</h2>
+
+        <div class="tags">
+          <span class="tag" *ngIf="selectedProject().platform">📱 {{ selectedProject().platform }}</span>
+          <span class="tag" *ngIf="selectedProject().genre">🎮 {{ selectedProject().genre }}</span>
+          <span class="tag downloads" *ngIf="selectedProject().downloads">⬇️ {{ selectedProject().downloads }} Downloads</span>
+        </div>
+
+        <p class="description">{{ selectedProject().description }}</p>
+
+        <a *ngIf="selectedProject().marketLink"
+           [href]="selectedProject().marketLink"
+           target="_blank"
+           class="btn-primary">
+          View on Store
+        </a>
+      </div>
+    </div>
+  </div>
+  }
+
 </div>

@@ -1,8 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
-import { ProjectService } from '../../services/project.service';
-import { ProfileService } from '../../services/profile.service';
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ReactiveFormsModule, FormGroup, FormControl, Validators} from '@angular/forms';
+import {ProjectService} from '../../services/project.service';
+import {ProfileService} from '../../services/profile.service';
 
 @Component({
   selector: 'app-admin',
@@ -32,13 +32,13 @@ export class AdminComponent implements OnInit {
 
   projectForm = new FormGroup({
     name: new FormControl('', Validators.required),
+    description: new FormControl(''),
     platform: new FormControl('Google Play', Validators.required),
     genre: new FormControl(''),
     downloads: new FormControl('0'),
-    description: new FormControl(''),
     videoUrl: new FormControl(''),
-    previewImageUrl: new FormControl(''),
-    marketLink: new FormControl('')
+    marketLink: new FormControl(''),
+    previewImageUrl: new FormControl('')
   });
 
   ngOnInit(): void {
@@ -80,7 +80,7 @@ export class AdminComponent implements OnInit {
 
     this.isSubmittingProject = true;
     const id = this.editingProjectId();
-    const projectData = { ...this.projectForm.value, id: id };
+    const projectData = {...this.projectForm.value, id: id};
 
     if (id) {
       // Update existing project
@@ -108,12 +108,13 @@ export class AdminComponent implements OnInit {
   editProject(project: any) {
     this.editingProjectId.set(project.id);
     this.projectForm.patchValue(project);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to project form section (approximately 450px down, after profile section)
+    window.scrollTo({top: 450, behavior: 'smooth'});
   }
 
   cancelEdit() {
     this.editingProjectId.set(null);
-    this.projectForm.reset({ platform: 'Google Play', downloads: '0' });
+    this.projectForm.reset({platform: 'Google Play', downloads: '0'});
   }
 
   deleteProject(id: number) {

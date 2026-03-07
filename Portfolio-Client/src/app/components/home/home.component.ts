@@ -42,12 +42,12 @@ export class HomeComponent implements OnInit {
 
   openProject(project: any) {
     this.selectedProject.set(project);
-    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
   }
 
   closeProject() {
     this.selectedProject.set(null);
-    document.body.style.overflow = 'auto';
+    document.documentElement.style.overflow = 'auto';
   }
 
   // Mini-game logic
