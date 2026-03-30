@@ -1,37 +1,54 @@
-﻿# =========================
-# 1. JetBrains Rider (IDE)
-# =========================
-.idea/
+﻿#############################################
+# IDEs & Editors (Catch-all for subfolders)
+#############################################
+# Ігнорує налаштування Rider/IntelliJ у всіх папках
+**/.idea/
 *.sln.iml
-*.user
-*.userprefs
-*.suo
+*.idea
 
-# =========================
-# 2. .NET / C# (Backend)
-# =========================
-[Bb]in/
-[Oo]bj/
-# Файли локальної бази даних (щоб не тягнути тестові дані в GitHub)
-*.db
-*.db-shm
-*.db-wal
-appsettings.Development.json
+# Ігнорує налаштування VS Code у всіх папках
+**/.vscode/
+!**/.vscode/settings.json
+!**/.vscode/tasks.json
+!**/.vscode/launch.json
 
-# =========================
-# 3. Angular / Node.js (Frontend)
-# =========================
-node_modules/
-dist/
-.angular/
-coverage/
-# Логи помилок npm
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# =========================
-# 4. System Files (OS)
-# =========================
+#############################################
+# General / OS
+#############################################
 .DS_Store
 Thumbs.db
+desktop.ini
+*.swp
+*.bak
+*.log
+
+#############################################
+# Backend: .NET API (Portfolio)
+#############################################
+**/bin/
+**/obj/
+**/publish/
+# Секрети та локальні налаштування
+**/appsettings.Development.json
+**/appsettings.local.json
+**/secrets.json
+
+#############################################
+# Frontend: Angular (Portfolio-Client)
+#############################################
+# Залежності (ОБОВ'ЯЗКОВО для Vercel)
+**/node_modules/
+# Результати збірки та кеш
+**/dist/
+**/.angular/
+# Логи npm
+npm-debug.log*
+yarn-debug.log*
+
+#############################################
+# Database / Local Secrets
+#############################################
+*.db
+*.local.connection
+.env
+.env.*
