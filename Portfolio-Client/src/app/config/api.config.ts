@@ -1,5 +1,7 @@
+import { environment } from '../../environments/environment';
+
 export const API_CONFIG = {
-  baseUrl: 'http://localhost:5177/api',
+  baseUrl: environment.baseUrl,
   endpoints: {
     project: 'Project',
     auth: 'auth',

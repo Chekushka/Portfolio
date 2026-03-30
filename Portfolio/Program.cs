@@ -13,10 +13,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngularApp",
-        policy => policy.WithOrigins("http://localhost:4200")
+    options.AddPolicy("MyPortfolioPolicy", policy =>
+    {
+        policy.WithOrigins(
+                "portfolio-three-theta-fsbvdtwaki.vercel.app",
+                "https://chekuns.dev",
+                "http://localhost:4200"
+            )
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=portfolio.db"));
