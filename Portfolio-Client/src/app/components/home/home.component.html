@@ -53,10 +53,9 @@
 
       <div class="video-container" *ngIf="selectedProject().videoUrl">
         <iframe
-          [src]="selectedProject().videoUrl"
+          [src]="selectedProject().videoUrl | safeUrl"
           frameborder="0"
           allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen
           style="width: 100%; aspect-ratio: 16/9;">
         </iframe>
       </div>

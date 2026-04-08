@@ -2,11 +2,12 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ProfileService } from '../../services/profile.service';
+import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SafeUrlPipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
