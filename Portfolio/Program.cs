@@ -18,6 +18,7 @@ builder.Services.AddCors(options =>
         policy.WithOrigins(
                 "portfolio-three-theta-fsbvdtwaki.vercel.app",
                 "https://chekuns.dev",
+                "https://www.chekuns.dev",
                 "http://localhost:4200"
             )
             .AllowAnyHeader()
@@ -44,8 +45,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 var app = builder.Build();
-app.UseAuthentication();
-app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
@@ -53,20 +52,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapControllers();
+app.UseRouting();
+app.UseCors("MyPortfolioPolicy");
 
-// Активуємо політику
-app.UseCors("AllowAngularApp");
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
     
-    // Створюємо базу, якщо її ще немає
     context.Database.EnsureCreated();
-
-    // Якщо в таблиці Projects порожньо — додаємо перші записи
+    
     if (!context.Projects.Any())
     {
         context.Projects.AddRange(
