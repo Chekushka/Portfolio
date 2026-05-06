@@ -1,54 +1,72 @@
 .main-nav {
-  background: rgba(255, 255, 255, 0.85);
-  /* Glassmorphism blur effect */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  z-index: 1000; /* Ensures the navbar stays above all other content */
+  z-index: 1000;
+  background: var(--g-bg);
+  border-bottom: 2px solid var(--g-border);
 }
 
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  max-width: 1200px;
+  padding: 0.85rem 2rem;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 .logo {
-  font-size: 1.25rem;
+  font-family: var(--g-font-hero);
+  font-size: 1.35rem;
   font-weight: 700;
   text-decoration: none;
-  color: var(--primary);
+  color: var(--g-primary);
+  letter-spacing: -0.3px;
 }
 
-.links a {
-  text-decoration: none;
-  color: var(--secondary);
-  margin-left: 1.5rem;
-  font-weight: 500;
-  transition: color 0.2s ease;
+.links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 
-  &:hover, &.active {
-    color: var(--primary);
+  a {
+    font-family: var(--g-font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--g-muted);
+    padding: 0.45rem 0.9rem;
+    border-radius: 2px;
+    border: 2px solid transparent;
+    transition: color 0.18s, border-color 0.18s, background 0.18s;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--g-primary);
+      border-color: var(--g-border);
+    }
+
+    &.active {
+      color: var(--g-primary);
+      background: oklch(92% 0.08 278);
+      border-color: oklch(86% 0.12 278);
+    }
   }
 }
 
 .content-wrapper {
-  min-height: calc(100vh - 140px);
-  max-width: 1200px;
+  min-height: calc(100vh - 120px);
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
 }
 
 .footer {
   text-align: center;
-  padding: 1.5rem;
-  color: var(--secondary);
-  border-top: 1px solid #e2e8f0;
-  background: var(--surface);
+  padding: 1.5rem 2rem;
+  font-family: var(--g-font-display);
+  font-size: 0.72rem;
+  color: var(--g-muted);
+  border-top: 2px solid var(--g-border);
+  background: var(--g-bg);
+  letter-spacing: 0.5px;
 }

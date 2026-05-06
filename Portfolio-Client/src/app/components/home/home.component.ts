@@ -1,8 +1,15 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ProfileService } from '../../services/profile.service';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
+
+interface FloatingCoin {
+  id: number;
+  left: number;
+  value: number;
+  duration: number;
+}
 
 @Component({
   selector: 'app-home',
@@ -11,59 +18,75 @@ import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
   private profileService = inject(ProfileService);
+  private coinIdCounter = 0;
+  private spawnInterval: ReturnType<typeof setInterval> | null = null;
+  private despawnTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
 
   projects = signal<any[]>([]);
-
-  // Use a signal for the profile to handle async DB data seamlessly
-  profile = signal<any>({
-    name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: ''
-  });
-
+  profile = signal<any>({ name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: '' });
   selectedProject = signal<any | null>(null);
-
-  // Global mini-game state
   gameScore = signal<number>(0);
-  coinPosition = signal({ top: '50vh', left: '50vw' });
+  floatingCoins = signal<FloatingCoin[]>([]);
 
   ngOnInit(): void {
-    // Load projects
+    document.body.style.backgroundColor = '#faf8f4';
+
     this.projectService.getProjects().subscribe(data => this.projects.set(data));
+    this.profileService.getProfile().subscribe(data => { if (data) this.profile.set(data); });
 
-    // Load profile from database
-    this.profileService.getProfile().subscribe(data => {
-      if (data) this.profile.set(data);
-    });
+    setTimeout(() => this.spawnCoin(), 5000);
 
-    // Set initial coin position
-    this.moveCoinRandomly();
+    this.spawnInterval = setInterval(() => {
+      if (this.floatingCoins().length < 2) this.spawnCoin();
+    }, 10000);
   }
 
-  openProject(project: any) {
+  ngOnDestroy(): void {
+    document.body.style.backgroundColor = '';
+    if (this.spawnInterval) clearInterval(this.spawnInterval);
+    this.despawnTimeouts.forEach(t => clearTimeout(t));
+  }
+
+  private spawnCoin(): void {
+    const id = ++this.coinIdCounter;
+    const duration = 9 + Math.random() * 6;
+    const coin: FloatingCoin = {
+      id,
+      left: 6 + Math.random() * 88,
+      value: Math.random() < 0.65 ? 1 : Math.random() < 0.85 ? 3 : 5,
+      duration,
+    };
+    this.floatingCoins.update(coins => [...coins, coin]);
+    const timeout = setTimeout(() => this.despawnCoin(id), (duration + 0.5) * 1000);
+    this.despawnTimeouts.set(id, timeout);
+  }
+
+  catchCoin(coin: FloatingCoin): void {
+    this.gameScore.update(s => s + coin.value);
+    this.despawnCoin(coin.id);
+    setTimeout(() => this.spawnCoin(), 300);
+  }
+
+  private despawnCoin(id: number): void {
+    this.floatingCoins.update(coins => coins.filter(c => c.id !== id));
+    const t = this.despawnTimeouts.get(id);
+    if (t) { clearTimeout(t); this.despawnTimeouts.delete(id); }
+  }
+
+  formattedScore(): string {
+    return this.gameScore().toString().padStart(8, '0');
+  }
+
+  openProject(project: any): void {
     this.selectedProject.set(project);
     document.documentElement.style.overflow = 'hidden';
   }
 
-  closeProject() {
+  closeProject(): void {
     this.selectedProject.set(null);
     document.documentElement.style.overflow = 'auto';
-  }
-
-  // Mini-game logic
-  catchCoin() {
-    this.gameScore.update(s => s + 1);
-    this.moveCoinRandomly();
-  }
-
-  private moveCoinRandomly() {
-    // Generate random position between 10% and 90% of viewport width/height
-    // to ensure the coin doesn't spawn off-screen
-    const randomTop = Math.floor(Math.random() * 90) + 5;
-    const randomLeft = Math.floor(Math.random() * 90) + 5;
-
-    // Use vh (viewport height) and vw (viewport width)
-    this.coinPosition.set({ top: `${randomTop}%`, left: `${randomLeft}%` });
   }
 }

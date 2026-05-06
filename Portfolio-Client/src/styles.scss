@@ -1,16 +1,20 @@
 :root {
-  --bg-color: #fafafa;
-  --text-main: #111827;
-  --text-muted: #6b7280;
-  --accent: #10b981;
-  --accent-hover: #059669;
-  --card-bg: #ffffff;
+  --g-bg:         oklch(97.5% 0.008 75);
+  --g-card:       oklch(99.0% 0.005 75);
+  --g-border:     oklch(86.0% 0.022 75);
+  --g-text:       oklch(22.0% 0.018 265);
+  --g-muted:      oklch(52.0% 0.025 265);
+  --g-primary:    oklch(48.0% 0.24 278);
+  --g-cherry:     oklch(54.0% 0.22 22);
+  --g-font-hero:    'Fredoka', sans-serif;
+  --g-font-display: 'Pixelify Sans', sans-serif;
+  --g-font-body:    'Nunito', sans-serif;
 }
 
 body {
   margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-main);
+  font-family: var(--g-font-body), system-ui, sans-serif;
+  background-color: var(--g-bg);
+  color: var(--g-text);
   -webkit-font-smoothing: antialiased;
 }

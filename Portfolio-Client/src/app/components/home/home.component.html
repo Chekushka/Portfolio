@@ -1,90 +1,159 @@
 <div class="portfolio-wrapper">
 
-  <div class="score-tracker">
-    <span>🪙 Coins: {{ gameScore() }}</span>
-  </div>
-  <div class="global-coin"
-       [style.top]="coinPosition().top"
-       [style.left]="coinPosition().left"
-       (click)="catchCoin()">
+  <!-- Dot-grid background -->
+  <div class="bg-dots" aria-hidden="true"></div>
+
+  <!-- Floating Coin Bubbles (Coin Bubbles game reimagined) -->
+  @for (coin of floatingCoins(); track coin.id) {
+    <div class="bubble-coin"
+         [style.left.%]="coin.left"
+         [style.animation-duration.s]="coin.duration"
+         (click)="catchCoin(coin)">
+      <div class="coin-face">
+        <span class="coin-label">+{{ coin.value }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Arcade HUD Score -->
+  <div class="hud">
+    <div class="hud-label">SCORE</div>
+    <div class="hud-value">{{ formattedScore() }}</div>
   </div>
 
+  <!-- ==================== HERO ==================== -->
   <section class="hero">
-    <div class="hero-content">
-      <h1>Hi, I'm {{ profile().name }}</h1>
-      <h2 class="accent-text">{{ profile().role }}</h2>
-      <p>{{ profile().bio }}</p>
 
-      <div class="action-buttons">
-        <a *ngIf="profile().cvUrl" [href]="profile().cvUrl" target="_blank" class="btn-primary">Download CV</a>
-        <a *ngIf="profile().email" [href]="'mailto:' + profile().email" class="btn-secondary">Get in Touch</a>
+    <div class="hero-content">
+      <div class="eyebrow">// GAME DEVELOPER</div>
+
+      <h1 class="hero-name">{{ profile().name || 'SERHII CHEKUN' }}</h1>
+      <div class="hero-role">{{ profile().role || 'Indie Game Creator' }}</div>
+
+      <p class="hero-bio">{{ profile().bio }}</p>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">{{ projects().length || 0 }}+</div>
+          <div class="stat-lbl">GAMES</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">100K+</div>
+          <div class="stat-lbl">DOWNLOADS</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">4+</div>
+          <div class="stat-lbl">YRS XP</div>
+        </div>
+      </div>
+
+      <div class="hero-actions">
+        @if (profile().cvUrl) {
+          <a [href]="profile().cvUrl" target="_blank" class="btn-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            Download CV
+          </a>
+        }
+        @if (profile().email) {
+          <a [href]="'mailto:' + profile().email" class="btn-outline">Get in Touch</a>
+        }
       </div>
     </div>
 
     <div class="hero-visual">
-      <img *ngIf="profile().photoUrl" [src]="profile().photoUrl" alt="Profile Photo" class="profile-img">
+      <div class="profile-wrap">
+        <div class="profile-glow"></div>
+        @if (profile().photoUrl) {
+          <img [src]="profile().photoUrl" [alt]="profile().name" class="profile-img">
+        } @else {
+          <div class="profile-placeholder">
+            <span>{{ (profile().name || 'SC').slice(0,2).toUpperCase() }}</span>
+          </div>
+        }
+        <div class="scan-line" aria-hidden="true"></div>
+        <div class="corner c-tl"></div>
+        <div class="corner c-tr"></div>
+        <div class="corner c-bl"></div>
+        <div class="corner c-br"></div>
+      </div>
+
+      <div class="badge b1">🎮 UNITY</div>
+      <div class="badge b2">📱 MOBILE</div>
+      <div class="badge b3">⬇️ 100K+</div>
     </div>
+
   </section>
 
+  <!-- ==================== PROJECTS ==================== -->
   <section class="projects">
-    <h2>Selected Works</h2>
+    <div class="section-head">
+      <div class="eyebrow pink">// SELECTED WORKS</div>
+      <h2>GAMES</h2>
+      <div class="head-line"></div>
+    </div>
+
     <div class="grid">
       @for (p of projects(); track p.id) {
-      <div class="card" (click)="openProject(p)">
-        <div class="card-image">
-          <img [src]="p.previewImageUrl || 'https://placehold.co/600x400/eee/999?text=No+Image'" alt="Preview">
-          <div class="overlay">
-            <span>View Details</span>
+        <div class="card" (click)="openProject(p)">
+          <div class="card-accent-bar"></div>
+          <div class="card-img-wrap">
+            <img [src]="p.previewImageUrl || 'https://placehold.co/600x400/e8e4f8/5b3fc8?text=NO+IMAGE'"
+                 [alt]="p.name">
+            <div class="card-overlay">▶ PLAY GAME</div>
           </div>
-        </div>
-        <div class="card-info">
-          <h3>{{ p.name }}</h3>
-            <span class="genre">{{ p.genre }}</span>
+          <div class="card-body">
+            <h3>{{ p.name }}</h3>
+            <div class="card-tags">
+              @if (p.platform) { <span class="ctag cyan">{{ p.platform }}</span> }
+              @if (p.genre) { <span class="ctag pink">{{ p.genre }}</span> }
+            </div>
           </div>
         </div>
       }
     </div>
   </section>
 
+  <!-- ==================== MODAL ==================== -->
   @if (selectedProject()) {
-  <div class="modal-backdrop" (click)="closeProject()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <button class="close-btn" (click)="closeProject()">✕</button>
+    <div class="modal-backdrop" (click)="closeProject()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <button class="modal-close" (click)="closeProject()" aria-label="Close">✕</button>
 
-      <div class="video-container" *ngIf="selectedProject().videoUrl">
-        <iframe
-          [src]="selectedProject().videoUrl | safeUrl"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture"
-          style="width: 100%; aspect-ratio: 16/9;">
-        </iframe>
-      </div>
+        @if (selectedProject().videoUrl) {
+          <div class="modal-media">
+            <iframe [src]="selectedProject().videoUrl | safeUrl"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    style="width:100%; aspect-ratio:16/9;"></iframe>
+          </div>
+        } @else if (selectedProject().previewImageUrl) {
+          <img [src]="selectedProject().previewImageUrl"
+               [alt]="selectedProject().name"
+               class="modal-img">
+        }
 
-      <img *ngIf="!selectedProject().videoUrl && selectedProject().previewImageUrl"
-           [src]="selectedProject().previewImageUrl"
-           alt="Project Preview"
-           class="modal-fallback-img">
+        <div class="modal-details">
+          <div class="eyebrow">// GAME DETAILS</div>
+          <h2>{{ selectedProject().name }}</h2>
 
-      <div class="modal-details">
-        <h2>{{ selectedProject().name }}</h2>
+          <div class="modal-tags">
+            @if (selectedProject().platform) { <span class="mtag">📱 {{ selectedProject().platform }}</span> }
+            @if (selectedProject().genre)    { <span class="mtag">🎮 {{ selectedProject().genre }}</span> }
+            @if (selectedProject().downloads){ <span class="mtag green">⬇️ {{ selectedProject().downloads }}</span> }
+          </div>
 
-        <div class="tags">
-          <span class="tag" *ngIf="selectedProject().platform">📱 {{ selectedProject().platform }}</span>
-          <span class="tag" *ngIf="selectedProject().genre">🎮 {{ selectedProject().genre }}</span>
-          <span class="tag downloads" *ngIf="selectedProject().downloads">⬇️ {{ selectedProject().downloads }} Downloads</span>
+          <p class="modal-desc">{{ selectedProject().description }}</p>
+
+          @if (selectedProject().marketLink) {
+            <a [href]="selectedProject().marketLink" target="_blank" class="btn-primary">
+              View on Store →
+            </a>
+          }
         </div>
-
-        <p class="description">{{ selectedProject().description }}</p>
-
-        <a *ngIf="selectedProject().marketLink"
-           [href]="selectedProject().marketLink"
-           target="_blank"
-           class="btn-primary">
-          View on Store
-        </a>
       </div>
     </div>
-  </div>
   }
 
 </div>
