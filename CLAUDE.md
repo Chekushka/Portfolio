@@ -29,20 +29,9 @@ npx prettier --write src/         # Format code
 
 ### Backend (`Portfolio/`)
 
-`Program.cs` configures everything: EF Core (SQLite), JWT Bearer auth, CORS, Swagger, and seeds the database on startup (Projects only — Profile is not seeded, create it manually or via the PUT endpoint).
-
-Controllers live in `Api/Controllers/`:
-- `AuthController` — `POST /api/auth/login` returns a JWT (24h expiry). Credentials come from `appsettings.json → AdminCredentials`.
-- `ProjectController` — public GET, JWT-protected POST/PUT/DELETE for portfolio projects.
-- `ProfileController` — public GET, JWT-protected PUT for the single developer profile (Id=1; not auto-seeded, must exist in the DB).
-
-Models and `AppDbContext` are in `Api/Models/` and `Api/Data/`. Migrations are in `Migrations/`.
-
-The SQLite database file (`portfolio.db`) is created automatically via `EnsureCreated()` on first run.
-
-Configuration keys in `appsettings.json`:
-- `JwtSettings` — `SecretKey`, `Issuer`, `Audience`
-- `AdminCredentials` — `Username`, `Password`
+- Profile (`Id=1`) is **not seeded** — create manually or via `PUT /api/profile`.
+- JWT is 24h expiry; credentials sourced from `appsettings.json → AdminCredentials`.
+- DB auto-created via `EnsureCreated()` on first run (`portfolio.db`).
 
 ### Frontend (`Portfolio-Client/src/app/`)
 
