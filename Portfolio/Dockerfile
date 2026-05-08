@@ -7,7 +7,9 @@ RUN dotnet publish -c Release -r linux-arm64 --no-restore --self-contained false
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-RUN adduser --disabled-password --gecos "" appuser
+RUN adduser --disabled-password --gecos "" appuser && \
+    mkdir -p /app/data && \
+    chown -R appuser:appuser /app
 COPY --from=build --chown=appuser:appuser /app/publish .
 USER appuser
 ENV ASPNETCORE_URLS=http://+:8080
