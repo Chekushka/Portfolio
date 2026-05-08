@@ -27,7 +27,7 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=portfolio.db"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -76,5 +76,7 @@ using (var scope = app.Services.CreateScope())
         context.SaveChanges();
     }
 }
+
+app.MapGet("/health", () => Results.Ok());
 
 app.Run();
