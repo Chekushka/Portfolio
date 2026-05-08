@@ -5,6 +5,11 @@ services:
       dockerfile: Dockerfile
     platform: linux/arm64
     restart: always
+    environment:
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY}
+      - AdminCredentials__Username=${ADMIN_USERNAME}
+      - AdminCredentials__Password=${ADMIN_PASSWORD}
+      - ConnectionStrings__DefaultConnection=${DB_CONNECTION}
     volumes:
       - ./data:/app/data
     expose:

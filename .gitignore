@@ -52,3 +52,4 @@ yarn-debug.log*
 *.local.connection
 .env
 .env.*
+!.env.example
