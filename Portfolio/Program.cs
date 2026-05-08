@@ -16,7 +16,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy("MyPortfolioPolicy", policy =>
     {
         policy.WithOrigins(
-                "portfolio-three-theta-fsbvdtwaki.vercel.app",
                 "https://chekuns.dev",
                 "https://www.chekuns.dev",
                 "http://localhost:4200"
