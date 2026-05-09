@@ -32,6 +32,9 @@ npx prettier --write src/         # Format code
 - Profile (`Id=1`) is **not seeded** — create manually or via `PUT /api/profile`.
 - JWT is 24h expiry; credentials sourced from `appsettings.json → AdminCredentials`.
 - DB auto-created via `EnsureCreated()` on first run (`portfolio.db`).
+- `ContactMethods` table: up to 5 rows, ordered by `Order`. Controller enforces max-5 on POST with `MAX_CONTACT_METHODS` error. Reorder via `PUT /api/ContactMethods/reorder` (body: `int[]` of ordered IDs).
+- `Tags` table has nullable `IconKey` and `CustomIconUrl` columns added via `AddTagIcons` migration.
+- SVG icons bundled in `Portfolio-Client/src/assets/icons/` (15 files). Icon resolution: `iconKey → /assets/icons/{key}.svg`, else `customIconUrl`, else no icon.
 
 ### Frontend (`Portfolio-Client/src/app/`)
 
@@ -43,7 +46,9 @@ Angular 21 with **standalone components only** — no NgModules. Key patterns:
 
 Routes: `/` (home, public) → `/login` → `/admin` (protected).
 
-Services map 1:1 to backend controllers: `auth.service.ts`, `project.service.ts`, `profile.service.ts`.
+Services map 1:1 to backend controllers: `auth.service.ts`, `project.service.ts`, `profile.service.ts`, `tag.service.ts`, `contact-method.service.ts`.
+
+Shared components: `icon-picker/icon-picker.component.ts` — standalone `ControlValueAccessor` for selecting a predefined SVG icon or pasting a custom URL. Used in both the tag form and contact method form. Value type: `IconSelection { iconKey: string | null; customIconUrl: string | null }`.
 
 ## Key Constraints
 
