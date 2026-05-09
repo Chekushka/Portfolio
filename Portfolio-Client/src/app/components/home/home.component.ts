@@ -1,8 +1,29 @@
-import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, HostListener, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ProfileService } from '../../services/profile.service';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
+
+interface Project {
+  id: number;
+  name: string;
+  description: string;
+  platform: string;
+  genre: string;
+  downloads: string;
+  previewImageUrl: string;
+  videoUrl: string;
+  marketLink: string;
+}
+
+interface Profile {
+  name: string;
+  role: string;
+  bio: string;
+  photoUrl: string;
+  cvUrl: string;
+  email: string;
+}
 
 interface FloatingCoin {
   id: number;
@@ -25,15 +46,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   private spawnInterval: ReturnType<typeof setInterval> | null = null;
   private despawnTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
 
-  projects = signal<any[]>([]);
-  profile = signal<any>({ name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: '' });
-  selectedProject = signal<any | null>(null);
+  projects = signal<Project[]>([]);
+  profile = signal<Profile>({ name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: '' });
+  selectedProject = signal<Project | null>(null);
   gameScore = signal<number>(0);
   floatingCoins = signal<FloatingCoin[]>([]);
 
   ngOnInit(): void {
-    document.body.style.backgroundColor = '#faf8f4';
-
     this.projectService.getProjects().subscribe(data => this.projects.set(data));
     this.profileService.getProfile().subscribe(data => { if (data) this.profile.set(data); });
 
@@ -45,7 +64,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    document.body.style.backgroundColor = '';
     if (this.spawnInterval) clearInterval(this.spawnInterval);
     this.despawnTimeouts.forEach(t => clearTimeout(t));
   }
@@ -80,13 +98,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.gameScore().toString().padStart(8, '0');
   }
 
-  openProject(project: any): void {
+  openProject(project: Project): void {
     this.selectedProject.set(project);
     document.documentElement.style.overflow = 'hidden';
   }
 
   closeProject(): void {
     this.selectedProject.set(null);
-    document.documentElement.style.overflow = 'auto';
+    document.documentElement.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.selectedProject()) this.closeProject();
   }
 }
