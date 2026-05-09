@@ -35,19 +35,35 @@
   font-family: var(--font-body);
   color: var(--c-text);
   overflow-x: hidden;
-  background: var(--c-bg);
+  background: transparent;
 }
 
-// ── Tilemap grid background ────────────────────────────────────────────────────
+// ── Background layers ──────────────────────────────────────────────────────────
+
+// Warm amber center glow — pulses like light through paper
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 38%, oklch(70% 0.22 75 / 0.22) 0%, transparent 70%);
+  animation: ambientPulse 8s ease-in-out infinite alternate;
+}
+
+// Amber graph-paper that scrolls diagonally — clearly visible at 22% opacity
 .bg-dots {
   position: fixed;
   inset: 0;
-  background-image:
-    linear-gradient(oklch(48% 0.24 278 / 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, oklch(48% 0.24 278 / 0.05) 1px, transparent 1px);
-  background-size: 32px 32px;
   pointer-events: none;
   z-index: 0;
+  background-image:
+    linear-gradient(oklch(70% 0.22 75 / 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.22 75 / 0.22) 1px, transparent 1px),
+    linear-gradient(oklch(70% 0.22 75 / 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.22 75 / 0.10) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 40px 40px, 40px 40px;
+  animation: gridScroll 30s linear infinite;
 }
 
 .hero, .projects, .hud, .bubble-coin, .modal-backdrop {
@@ -615,6 +631,16 @@
 }
 
 // ── Keyframes ──────────────────────────────────────────────────────────────────
+@keyframes ambientPulse {
+  from { opacity: 0.45; }
+  to   { opacity: 1; }
+}
+
+@keyframes gridScroll {
+  from { background-position: 0 0, 0 0, 0 0, 0 0; }
+  to   { background-position: 160px 160px, 160px 160px, 40px 40px, 40px 40px; }
+}
+
 @keyframes fadeInUp {
   from { transform: translateY(18px); opacity: 0; }
   to   { transform: translateY(0);    opacity: 1; }

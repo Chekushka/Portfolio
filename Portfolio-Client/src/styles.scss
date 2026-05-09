@@ -11,10 +11,34 @@
   --g-font-body:    'Nunito', sans-serif;
 }
 
+html {
+  background-color: var(--g-bg);
+}
+
 body {
   margin: 0;
   font-family: var(--g-font-body), system-ui, sans-serif;
-  background-color: var(--g-bg);
+  background: transparent;
   color: var(--g-text);
   -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    linear-gradient(oklch(70% 0.22 75 / 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.22 75 / 0.22) 1px, transparent 1px),
+    linear-gradient(oklch(70% 0.22 75 / 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.22 75 / 0.10) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 40px 40px, 40px 40px;
+  animation: globalGridScroll 30s linear infinite;
+}
+
+@keyframes globalGridScroll {
+  from { background-position: 0 0, 0 0, 0 0, 0 0; }
+  to   { background-position: 160px 160px, 160px 160px, 40px 40px, 40px 40px; }
 }
