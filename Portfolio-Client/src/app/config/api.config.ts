@@ -6,6 +6,7 @@ export const API_CONFIG = {
     project: 'Project',
     auth: 'auth',
     profile: 'profile',
-    tags: 'Tags'
+    tags: 'Tags',
+    contactMethods: 'ContactMethods'
   }
 };

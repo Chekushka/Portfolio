@@ -6,6 +6,15 @@ export interface Tag {
   id: number;
   name: string;
   color: string;
+  iconKey: string | null;
+  customIconUrl: string | null;
+}
+
+export interface TagRequest {
+  name: string;
+  color: string;
+  iconKey: string | null;
+  customIconUrl: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -17,11 +26,11 @@ export class TagService {
     return this.http.get<Tag[]>(this.apiUrl);
   }
 
-  createTag(tag: Omit<Tag, 'id'>) {
+  createTag(tag: TagRequest) {
     return this.http.post<Tag>(this.apiUrl, tag);
   }
 
-  updateTag(id: number, tag: Omit<Tag, 'id'>) {
+  updateTag(id: number, tag: TagRequest) {
     return this.http.put<void>(`${this.apiUrl}/${id}`, { id, ...tag });
   }
 
