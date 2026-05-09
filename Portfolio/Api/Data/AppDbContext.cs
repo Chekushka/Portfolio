@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<ContactMethod> ContactMethods { get; set; }
     public DbSet<UserProfile> Profiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
