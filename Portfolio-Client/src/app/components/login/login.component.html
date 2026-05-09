@@ -9,10 +9,17 @@
       </div>
 
       <div class="form-group">
-        <input type="password" formControlName="password" placeholder="Password">
+        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password">
       </div>
 
-      <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      <div class="show-password">
+        <label>
+          <input type="checkbox" [(ngModel)]="showPassword" [ngModelOptions]="{standalone: true}">
+          Show password
+        </label>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid || isLoading">Login</button>
     </form>
   </div>
 </div>
