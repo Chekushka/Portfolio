@@ -159,14 +159,16 @@ export class AdminComponent implements OnInit {
         next: () => {
           this.allTags.update(tags => tags.map(t => t.id === id ? { id, name, color } : t));
           this.cancelTagEdit();
-        }
+        },
+        error: (err) => console.error('Tag operation failed', err)
       });
     } else {
       this.tagService.createTag({ name, color }).subscribe({
         next: (tag) => {
           this.allTags.update(tags => [...tags, tag]);
           this.tagForm.reset({ color: '#3b82f6' });
-        }
+        },
+        error: (err) => console.error('Tag operation failed', err)
       });
     }
   }

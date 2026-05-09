@@ -134,6 +134,7 @@ export class MarkdownEditorComponent implements ControlValueAccessor {
   insertLink(): void { this.insert('[', '](url)'); }
 
   insert(before: string, after = ''): void {
+    if (this.isPreviewing) return;
     const el = this.textareaRef.nativeElement;
     const start = el.selectionStart;
     const end = el.selectionEnd;
