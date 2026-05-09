@@ -853,3 +853,21 @@
     animation: none;
   }
 }
+
+.modal-layout-above {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .modal-media { width: 100%; }
+}
+
+.modal-layout-side {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  align-items: flex-start;
+
+  .modal-media { flex: 0 0 50%; }
+  .modal-desc { flex: 1; overflow-y: auto; max-height: 400px; }
+}

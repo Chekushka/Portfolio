@@ -123,11 +123,8 @@
           <div class="card-body">
             <h3>{{ p.name }}</h3>
             <div class="card-tags">
-              @if (p.platform) {
-                <span class="ctag cyan">{{ p.platform }}</span>
-              }
-              @if (p.genre) {
-                <span class="ctag pink">{{ p.genre }}</span>
+              @for (tag of p.tags; track tag.id) {
+                <span class="ctag" [style.background-color]="tag.color">{{ tag.name }}</span>
               }
             </div>
           </div>
@@ -149,17 +146,27 @@
         <button class="modal-close" (click)="closeProject()" aria-label="Close">✕</button>
 
         @if (proj.videoUrl) {
-          <div class="modal-media">
-            <iframe
-              [src]="proj.videoUrl | safeUrl"
-              frameborder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              style="width: 100%; aspect-ratio: 16/9"
-              [title]="proj.name + ' gameplay video'"
-            ></iframe>
+          <div [class]="proj.videoLayout === 'side' ? 'modal-layout-side' : 'modal-layout-above'">
+            <div class="modal-media">
+              <iframe
+                [src]="proj.videoUrl | safeUrl"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                style="width: 100%; aspect-ratio: 16/9"
+                [title]="proj.name + ' gameplay video'"
+              ></iframe>
+            </div>
+            <div class="modal-desc">
+              <markdown [data]="proj.description" />
+            </div>
           </div>
-        } @else if (proj.previewImageUrl) {
-          <img [src]="proj.previewImageUrl" [alt]="proj.name" class="modal-img" />
+        } @else {
+          @if (proj.previewImageUrl) {
+            <img [src]="proj.previewImageUrl" [alt]="proj.name" class="modal-img" />
+          }
+          <div class="modal-desc">
+            <markdown [data]="proj.description" />
+          </div>
         }
 
         <div class="modal-details">
@@ -167,18 +174,13 @@
           <h2 id="modal-title">{{ proj.name }}</h2>
 
           <div class="modal-tags">
-            @if (proj.platform) {
-              <span class="mtag">📱 {{ proj.platform }}</span>
-            }
-            @if (proj.genre) {
-              <span class="mtag">🎮 {{ proj.genre }}</span>
+            @for (tag of proj.tags; track tag.id) {
+              <span class="mtag" [style.background-color]="tag.color">{{ tag.name }}</span>
             }
             @if (proj.downloads) {
               <span class="mtag green">⬇️ {{ proj.downloads }}</span>
             }
           </div>
-
-          <p class="modal-desc">{{ proj.description }}</p>
 
           @if (proj.marketLink) {
             <a [href]="proj.marketLink" target="_blank" class="btn-primary"> View on Store → </a>

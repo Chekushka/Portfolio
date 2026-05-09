@@ -3,17 +3,19 @@ import { CommonModule } from '@angular/common';
 import { ProjectService } from '../../services/project.service';
 import { ProfileService } from '../../services/profile.service';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
+import { MarkdownModule } from 'ngx-markdown';
+import { Tag } from '../../services/tag.service';
 
 interface Project {
   id: number;
   name: string;
   description: string;
-  platform: string;
-  genre: string;
   downloads: string;
-  previewImageUrl: string;
-  videoUrl: string;
-  marketLink: string;
+  videoLayout: string;
+  previewImageUrl?: string;
+  videoUrl?: string;
+  marketLink?: string;
+  tags: Tag[];
 }
 
 interface Profile {
@@ -35,7 +37,7 @@ interface FloatingCoin {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, SafeUrlPipe],
+  imports: [CommonModule, SafeUrlPipe, MarkdownModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
