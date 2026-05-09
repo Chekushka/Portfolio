@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     
     public DbSet<Project> Projects => Set<Project>();
+    public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<UserProfile> Profiles { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
