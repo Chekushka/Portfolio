@@ -63,8 +63,23 @@
             Download CV
           </a>
         }
-        @if (profile().email) {
-          <a [href]="'mailto:' + profile().email" class="btn-outline">Get in Touch</a>
+        @if (contactMethods().length > 0) {
+          <div class="contact-icons">
+            @for (method of contactMethods(); track method.id) {
+              <a [href]="method.url" target="_blank" rel="noopener noreferrer"
+                 class="contact-icon-btn" [title]="method.label"
+                 [attr.aria-label]="method.label">
+                @if (method.iconKey) {
+                  <img [src]="'/assets/icons/' + method.iconKey + '.svg'"
+                       [alt]="method.label" width="20" height="20">
+                } @else if (method.customIconUrl) {
+                  <img [src]="method.customIconUrl" [alt]="method.label" width="20" height="20">
+                } @else {
+                  <span aria-hidden="true">{{ method.label.slice(0, 2).toUpperCase() }}</span>
+                }
+              </a>
+            }
+          </div>
         }
       </div>
     </div>
@@ -124,7 +139,14 @@
             <h3>{{ p.name }}</h3>
             <div class="card-tags">
               @for (tag of p.tags; track tag.id) {
-                <span class="ctag" [style.background-color]="tag.color">{{ tag.name }}</span>
+                <span class="ctag" [style.background-color]="tag.color">
+                  @if (tag.iconKey) {
+                    <img class="tag-icon" [src]="'/assets/icons/' + tag.iconKey + '.svg'" alt="" width="12" height="12">
+                  } @else if (tag.customIconUrl) {
+                    <img class="tag-icon" [src]="tag.customIconUrl" alt="" width="12" height="12">
+                  }
+                  {{ tag.name }}
+                </span>
               }
             </div>
           </div>
@@ -175,7 +197,14 @@
 
           <div class="modal-tags">
             @for (tag of proj.tags; track tag.id) {
-              <span class="mtag" [style.background-color]="tag.color">{{ tag.name }}</span>
+              <span class="mtag" [style.background-color]="tag.color">
+                @if (tag.iconKey) {
+                  <img class="tag-icon" [src]="'/assets/icons/' + tag.iconKey + '.svg'" alt="" width="12" height="12">
+                } @else if (tag.customIconUrl) {
+                  <img class="tag-icon" [src]="tag.customIconUrl" alt="" width="12" height="12">
+                }
+                {{ tag.name }}
+              </span>
             }
             @if (proj.downloads) {
               <span class="mtag green">⬇️ {{ proj.downloads }}</span>

@@ -871,3 +871,44 @@
   .modal-media { flex: 0 0 50%; }
   .modal-desc { flex: 1; overflow-y: auto; max-height: 400px; }
 }
+
+// ── Contact icons ───────────────────────────────────────────────────────────────
+.contact-icons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.contact-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--c-border);
+  background: var(--c-card);
+  text-decoration: none;
+  color: var(--c-text);
+  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  img { display: block; filter: saturate(0) brightness(0.4); }
+
+  &:hover {
+    border-color: var(--c-primary);
+    background: var(--c-primary-pale);
+    transform: translateY(-2px);
+    img { filter: none; }
+  }
+}
+
+// ── Tag icon in badges ──────────────────────────────────────────────────────────
+.tag-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 3px;
+  filter: brightness(0) invert(1);
+}
