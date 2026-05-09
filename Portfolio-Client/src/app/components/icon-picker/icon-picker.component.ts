@@ -38,6 +38,7 @@ export const ICONS = [
     }
   </div>
   <input class="icon-url-input" type="text"
+         aria-label="Custom icon URL"
          placeholder="Or paste icon URL…"
          [value]="value.customIconUrl ?? ''"
          (input)="onCustomUrl($any($event.target).value)">
@@ -55,6 +56,7 @@ export const ICONS = [
   img { display: block; }
 }
 .icon-btn:hover { border-color: var(--g-primary); }
+.icon-btn:focus-visible { outline: 2px solid var(--g-primary); outline-offset: 2px; }
 .icon-btn.selected { border-color: var(--g-primary); background: oklch(96% 0.04 278); }
 .icon-url-input {
   width: 100%; padding: 0.5rem 0.75rem;
