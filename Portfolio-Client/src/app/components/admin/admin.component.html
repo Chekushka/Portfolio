@@ -3,6 +3,7 @@
   <nav class="admin-tabs">
     <button [class.active]="activeTab() === 'projects'" (click)="activeTab.set('projects')">Projects</button>
     <button [class.active]="activeTab() === 'tags'" (click)="activeTab.set('tags')">Tags</button>
+    <button [class.active]="activeTab() === 'contact'" (click)="activeTab.set('contact')">Contact</button>
     <button [class.active]="activeTab() === 'profile'" (click)="activeTab.set('profile')">Profile</button>
   </nav>
 
@@ -138,6 +139,10 @@
             <input type="color" formControlName="color" class="color-input">
           </div>
         </div>
+        <div class="form-field">
+          <label class="field-label">Icon</label>
+          <app-icon-picker formControlName="icon" />
+        </div>
         <div class="form-actions">
           <button type="submit" class="btn-primary" [disabled]="tagForm.invalid">
             {{ editingTagId() ? 'Update Tag' : 'Save Tag' }}
@@ -164,6 +169,70 @@
               <div class="actions">
                 <button class="btn-edit" (click)="editTag(tag)">Edit</button>
                 <button class="btn-delete" (click)="deleteTag(tag.id)">Delete</button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  }
+
+  <!-- ===== CONTACT TAB ===== -->
+  @if (activeTab() === 'contact') {
+    <section class="form-section">
+      <h2>{{ editingContactId() ? 'Edit Contact Method' : 'Add Contact Method' }}</h2>
+      @if (contactMethods().length >= 5 && !editingContactId()) {
+        <p class="empty-hint">Maximum 5 contact methods reached. Delete one to add another.</p>
+      } @else {
+        <form [formGroup]="contactForm" (ngSubmit)="onContactSubmit()">
+          <div class="form-row">
+            <input formControlName="label" placeholder="Label (e.g. LinkedIn) *">
+            <input formControlName="url" placeholder="URL or mailto:… *">
+          </div>
+          <div class="form-field">
+            <label class="field-label">Icon</label>
+            <app-icon-picker formControlName="icon" />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="contactForm.invalid || isSubmittingContact">
+              {{ editingContactId() ? 'Update' : 'Add Contact Method' }}
+            </button>
+            @if (editingContactId()) {
+              <button type="button" class="btn-cancel" (click)="cancelContactEdit()">Cancel</button>
+            }
+          </div>
+        </form>
+      }
+    </section>
+
+    <section class="list-section">
+      <h2>Contact Methods ({{ contactMethods().length }}/5)</h2>
+      <div class="admin-list">
+        @if (contactMethods().length === 0) {
+          <p class="empty-state">No contact methods yet.</p>
+        } @else {
+          @for (method of contactMethods(); track method.id; let i = $index) {
+            <div class="admin-card">
+              <div class="contact-info">
+                @if (method.iconKey) {
+                  <img class="contact-icon-preview" [src]="'/assets/icons/' + method.iconKey + '.svg'"
+                       [alt]="method.label" width="28" height="28">
+                } @else if (method.customIconUrl) {
+                  <img class="contact-icon-preview" [src]="method.customIconUrl"
+                       [alt]="method.label" width="28" height="28">
+                } @else {
+                  <span class="contact-icon-placeholder">{{ method.label.slice(0,2).toUpperCase() }}</span>
+                }
+                <div>
+                  <strong>{{ method.label }}</strong>
+                  <p class="meta">{{ method.url }}</p>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn-edit" (click)="moveContact(i, -1)" [disabled]="i === 0" title="Move up">↑</button>
+                <button class="btn-edit" (click)="moveContact(i, 1)" [disabled]="i === contactMethods().length - 1" title="Move down">↓</button>
+                <button class="btn-edit" (click)="editContact(method)">Edit</button>
+                <button class="btn-delete" (click)="deleteContact(method.id)">Delete</button>
               </div>
             </div>
           }
