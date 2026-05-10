@@ -35,7 +35,7 @@ public class ProjectController : ControllerBase
             VideoUrl = p.VideoUrl,
             MarketLink = p.MarketLink,
             PreviewImageUrl = p.PreviewImageUrl,
-            Tags = p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name, Color = t.Color }).ToList()
+            Tags = p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name, Color = t.Color, IconKey = t.IconKey, CustomIconUrl = t.CustomIconUrl }).ToList()
         });
 
         return Ok(response);
@@ -74,7 +74,7 @@ public class ProjectController : ControllerBase
             VideoUrl = project.VideoUrl,
             MarketLink = project.MarketLink,
             PreviewImageUrl = project.PreviewImageUrl,
-            Tags = project.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name, Color = t.Color }).ToList()
+            Tags = project.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name, Color = t.Color, IconKey = t.IconKey, CustomIconUrl = t.CustomIconUrl }).ToList()
         };
 
         return CreatedAtAction(nameof(GetProjects), new { id = project.Id }, response);

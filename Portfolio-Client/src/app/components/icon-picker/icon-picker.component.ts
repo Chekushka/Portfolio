@@ -13,7 +13,8 @@ export interface IconSelection {
 export const ICONS = [
   'linkedin', 'github', 'telegram', 'whatsapp', 'discord',
   'email', 'instagram', 'x', 'youtube', 'reddit',
-  'tiktok', 'phone', 'website', 'twitch', 'vk'
+  'tiktok', 'phone', 'website', 'twitch',
+  'googleplay', 'appstore', 'steam', 'itchdotio'
 ] as const;
 
 @Component({
