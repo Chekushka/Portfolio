@@ -1,59 +1,72 @@
-# PortfolioClient
+# Portfolio Client — Angular 21
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.0.
+Single-page application frontend for the portfolio. Public landing page with an interactive mini-game, plus a protected admin panel for managing all content.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- **Angular 21** — standalone components, no NgModules
+- **TypeScript 5.9**
+- **SCSS** — custom design tokens, pixel-art aesthetic
+- **Signals** — reactive auth state and data without RxJS subjects
+- **ngx-markdown** — project descriptions written in Markdown
+- **Vitest** — unit test runner
+
+## Running locally
 
 ```bash
+cd Portfolio-Client
+npm install
 ng serve
+# App: http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Requires the [API](../Portfolio/README.md) running on port `5177`.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Build & test
 
 ```bash
-ng generate component component-name
+ng build               # production build → dist/
+npx vitest             # unit tests
+npx prettier --write src/   # format
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## App structure
 
-```bash
-ng generate --help
+```
+src/app/
+  components/
+    home/          ← public landing page (mini-game, project grid, modal)
+    login/         ← login form
+    admin/         ← protected content manager
+    icon-picker/   ← reusable SVG icon selector (ControlValueAccessor)
+    markdown-editor/
+  services/        ← auth, project, profile, tag, contact-method
+  config/          ← API base URL and endpoint names (api.config.ts)
+  pipes/           ← safeUrl (DomSanitizer wrapper for iframe embeds)
 ```
 
-## Building
+## Routes
 
-To build the project run:
+| Path | Access | Component |
+|---|---|---|
+| `/` | Public | Home (portfolio + mini-game) |
+| `/login` | Public | Login form |
+| `/admin` | Protected | Content manager |
 
-```bash
-ng build
-```
+The `/admin` route is guarded by `auth.guard.ts`. Any 401 response auto-triggers logout and redirect to `/login` via `auth.interceptor.ts`.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Auth flow
 
-## Running unit tests
+1. `POST /api/auth/login` → receives JWT
+2. Token stored in `localStorage`
+3. On app init, `AuthService` decodes the `exp` claim — expired tokens are cleared immediately, before any guard or API call
+4. `authInterceptor` appends `Authorization: Bearer <token>` to every request
+5. 401 response → `AuthService.logout()` + navigate to `/login`
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Icon system
 
-```bash
-ng test
-```
+SVG icons live in `src/assets/icons/`. The `icon-picker` component lets admins pick a bundled icon by key or paste a custom URL. Resolution order: `iconKey → /assets/icons/{key}.svg` → `customIconUrl` → fallback text.
 
-## Running end-to-end tests
+## API config
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+All endpoint URLs are centralized in `src/app/config/api.config.ts`. Change the base URL there when switching environments — no hunting through services.
