@@ -30,7 +30,7 @@ npx prettier --write src/         # Format code
 ### Backend (`Portfolio/`)
 
 - Profile (`Id=1`) is **not seeded** — create manually or via `PUT /api/profile`.
-- JWT is 24h expiry; credentials sourced from `appsettings.json → AdminCredentials`.
+- JWT is 1h expiry; credentials sourced from `appsettings.json → AdminCredentials`.
 - DB auto-created via `EnsureCreated()` on first run (`portfolio.db`).
 - `ContactMethods` table: up to 5 rows, ordered by `Order`. Controller enforces max-5 on POST with `MAX_CONTACT_METHODS` error. Reorder via `PUT /api/ContactMethods/reorder` (body: `int[]` of ordered IDs).
 - `Tags` table has nullable `IconKey` and `CustomIconUrl` columns added via `AddTagIcons` migration.
