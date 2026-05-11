@@ -792,8 +792,8 @@
   font-size: 0.7rem;
   font-weight: 600;
   background: var(--c-surface);
-  border: 2px solid var(--c-border);
-  color: var(--c-muted);
+  border: 2px solid var(--c-border-strong);
+  color: oklch(15% 0.04 265);
 
   &.green {
     background: oklch(93% 0.07 145);
