@@ -908,6 +908,18 @@
   .grid {
     grid-template-columns: 1fr;
   }
+  .modal-layout-side {
+    flex-direction: column;
+
+    .modal-media {
+      flex: none;
+      width: 100%;
+    }
+
+    .modal-desc {
+      overflow-y: visible;
+    }
+  }
 }
 
 // ── Reduced motion ─────────────────────────────────────────────────────────────
