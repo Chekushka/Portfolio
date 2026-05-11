@@ -1,6 +1,30 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { API_CONFIG } from '../config/api.config';
+import { Tag } from './tag.service';
+
+export interface Project {
+  id: number;
+  name: string;
+  description: string;
+  downloads: string;
+  videoLayout: string;
+  videoUrl?: string;
+  marketLink?: string;
+  previewImageUrl?: string;
+  tags: Tag[];
+}
+
+export interface ProjectRequest {
+  name: string;
+  description: string;
+  downloads: string;
+  videoLayout: string;
+  videoUrl?: string;
+  marketLink?: string;
+  previewImageUrl?: string;
+  tagIds: number[];
+}
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -8,19 +32,18 @@ export class ProjectService {
   private apiUrl = `${API_CONFIG.baseUrl}/${API_CONFIG.endpoints.project}`;
 
   getProjects() {
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<Project[]>(this.apiUrl);
   }
 
-  addProject(project: any) {
-    return this.http.post<any>(this.apiUrl, project);
+  addProject(project: ProjectRequest) {
+    return this.http.post<Project>(this.apiUrl, project);
   }
 
   deleteProject(id: number) {
-    // Додаємо id до URL через слеш
-    return this.http.delete(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  updateProject(id: number, project: any) {
-    return this.http.put(`${this.apiUrl}/${id}`, project);
+  updateProject(id: number, project: ProjectRequest) {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, project);
   }
 }

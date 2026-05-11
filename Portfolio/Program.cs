@@ -63,14 +63,14 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<AppDbContext>();
-    
-    context.Database.EnsureCreated();
-    
+
+    context.Database.Migrate();
+
     if (!context.Projects.Any())
     {
         context.Projects.AddRange(
-            new Portfolio.Api.Models.Project { Name = "Coin Bubbles", Platform = "Google Play", Downloads = "50,000+" },
-            new Portfolio.Api.Models.Project { Name = "Money Clash", Platform = "Google Play", Downloads = "50,000+" }
+            new Portfolio.Api.Models.Project { Name = "Coin Bubbles", Downloads = "50,000+" },
+            new Portfolio.Api.Models.Project { Name = "Money Clash", Downloads = "50,000+" }
         );
         context.SaveChanges();
     }

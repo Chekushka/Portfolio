@@ -1,14 +1,20 @@
 <div class="portfolio-wrapper">
-
-  <!-- Dot-grid background -->
-  <div class="bg-dots" aria-hidden="true"></div>
+  <!-- Background layers -->
+  <div class="bg-orbs" aria-hidden="true"></div>
 
   <!-- Floating Coin Bubbles (Coin Bubbles game reimagined) -->
   @for (coin of floatingCoins(); track coin.id) {
-    <div class="bubble-coin"
-         [style.left.%]="coin.left"
-         [style.animation-duration.s]="coin.duration"
-         (click)="catchCoin(coin)">
+    <div
+      class="bubble-coin"
+      [style.left.%]="coin.left"
+      [style.animation-duration.s]="coin.duration"
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="'+' + coin.value + ' — click to catch'"
+      (click)="catchCoin(coin)"
+      (keydown.enter)="catchCoin(coin)"
+      (keydown.space)="catchCoin(coin); $event.preventDefault()"
+    >
       <div class="coin-face">
         <span class="coin-label">+{{ coin.value }}</span>
       </div>
@@ -23,7 +29,6 @@
 
   <!-- ==================== HERO ==================== -->
   <section class="hero">
-
     <div class="hero-content">
       <div class="eyebrow">// GAME DEVELOPER</div>
 
@@ -52,12 +57,29 @@
       <div class="hero-actions">
         @if (profile().cvUrl) {
           <a [href]="profile().cvUrl" target="_blank" class="btn-primary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+            </svg>
             Download CV
           </a>
         }
-        @if (profile().email) {
-          <a [href]="'mailto:' + profile().email" class="btn-outline">Get in Touch</a>
+        @if (contactMethods().length > 0) {
+          <div class="contact-icons">
+            @for (method of contactMethods(); track method.id) {
+              <a [href]="method.url" target="_blank" rel="noopener noreferrer"
+                 class="contact-icon-btn" [title]="method.label"
+                 [attr.aria-label]="method.label">
+                @if (method.iconKey) {
+                  <img [src]="'/assets/icons/' + method.iconKey + '.svg'"
+                       [alt]="method.label" width="20" height="20">
+                } @else if (method.customIconUrl) {
+                  <img [src]="method.customIconUrl" [alt]="method.label" width="20" height="20">
+                } @else {
+                  <span aria-hidden="true">{{ method.label.slice(0, 2).toUpperCase() }}</span>
+                }
+              </a>
+            }
+          </div>
         }
       </div>
     </div>
@@ -66,13 +88,12 @@
       <div class="profile-wrap">
         <div class="profile-glow"></div>
         @if (profile().photoUrl) {
-          <img [src]="profile().photoUrl" [alt]="profile().name" class="profile-img">
+          <img [src]="profile().photoUrl" [alt]="profile().name" class="profile-img" />
         } @else {
           <div class="profile-placeholder">
-            <span>{{ (profile().name || 'SC').slice(0,2).toUpperCase() }}</span>
+            <span>{{ (profile().name || 'SC').slice(0, 2).toUpperCase() }}</span>
           </div>
         }
-        <div class="scan-line" aria-hidden="true"></div>
         <div class="corner c-tl"></div>
         <div class="corner c-tr"></div>
         <div class="corner c-bl"></div>
@@ -83,7 +104,6 @@
       <div class="badge b2">📱 MOBILE</div>
       <div class="badge b3">⬇️ 100K+</div>
     </div>
-
   </section>
 
   <!-- ==================== PROJECTS ==================== -->
@@ -96,18 +116,38 @@
 
     <div class="grid">
       @for (p of projects(); track p.id) {
-        <div class="card" (click)="openProject(p)">
+        <div
+          class="card"
+          role="button"
+          tabindex="0"
+          (click)="openProject(p)"
+          (keydown.enter)="openProject(p)"
+          (keydown.space)="openProject(p); $event.preventDefault()"
+        >
           <div class="card-accent-bar"></div>
           <div class="card-img-wrap">
-            <img [src]="p.previewImageUrl || 'https://placehold.co/600x400/e8e4f8/5b3fc8?text=NO+IMAGE'"
-                 [alt]="p.name">
-            <div class="card-overlay">▶ PLAY GAME</div>
+            <img
+              [src]="
+                p.previewImageUrl || 'https://placehold.co/600x400/e8e4f8/5b3fc8?text=NO+IMAGE'
+              "
+              [alt]="p.name"
+              loading="lazy"
+            />
+            <div class="card-overlay" aria-hidden="true">▶ PLAY GAME</div>
           </div>
           <div class="card-body">
             <h3>{{ p.name }}</h3>
             <div class="card-tags">
-              @if (p.platform) { <span class="ctag cyan">{{ p.platform }}</span> }
-              @if (p.genre) { <span class="ctag pink">{{ p.genre }}</span> }
+              @for (tag of p.tags; track tag.id) {
+                <span class="ctag" [style.background-color]="tag.color">
+                  @if (tag.iconKey) {
+                    <img class="tag-icon" [src]="'/assets/icons/' + tag.iconKey + '.svg'" alt="" width="12" height="12">
+                  } @else if (tag.customIconUrl) {
+                    <img class="tag-icon" [src]="tag.customIconUrl" alt="" width="12" height="12">
+                  }
+                  {{ tag.name }}
+                </span>
+              }
             </div>
           </div>
         </div>
@@ -116,44 +156,66 @@
   </section>
 
   <!-- ==================== MODAL ==================== -->
-  @if (selectedProject()) {
+  @if (selectedProject(); as proj) {
     <div class="modal-backdrop" (click)="closeProject()">
-      <div class="modal" (click)="$event.stopPropagation()">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        (click)="$event.stopPropagation()"
+      >
         <button class="modal-close" (click)="closeProject()" aria-label="Close">✕</button>
 
-        @if (selectedProject().videoUrl) {
-          <div class="modal-media">
-            <iframe [src]="selectedProject().videoUrl | safeUrl"
-                    frameborder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    style="width:100%; aspect-ratio:16/9;"></iframe>
+        @if (proj.videoUrl) {
+          <div [class]="proj.videoLayout === 'side' ? 'modal-layout-side' : 'modal-layout-above'">
+            <div class="modal-media">
+              <iframe
+                [src]="proj.videoUrl | safeUrl"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                style="width: 100%; aspect-ratio: 16/9"
+                [title]="proj.name + ' gameplay video'"
+              ></iframe>
+            </div>
+            <div class="modal-desc">
+              <markdown [data]="proj.description" />
+            </div>
           </div>
-        } @else if (selectedProject().previewImageUrl) {
-          <img [src]="selectedProject().previewImageUrl"
-               [alt]="selectedProject().name"
-               class="modal-img">
+        } @else {
+          @if (proj.previewImageUrl) {
+            <img [src]="proj.previewImageUrl" [alt]="proj.name" class="modal-img" />
+          }
+          <div class="modal-desc">
+            <markdown [data]="proj.description" />
+          </div>
         }
 
         <div class="modal-details">
           <div class="eyebrow">// GAME DETAILS</div>
-          <h2>{{ selectedProject().name }}</h2>
+          <h2 id="modal-title">{{ proj.name }}</h2>
 
           <div class="modal-tags">
-            @if (selectedProject().platform) { <span class="mtag">📱 {{ selectedProject().platform }}</span> }
-            @if (selectedProject().genre)    { <span class="mtag">🎮 {{ selectedProject().genre }}</span> }
-            @if (selectedProject().downloads){ <span class="mtag green">⬇️ {{ selectedProject().downloads }}</span> }
+            @for (tag of proj.tags; track tag.id) {
+              <span class="mtag" [style.background-color]="tag.color">
+                @if (tag.iconKey) {
+                  <img class="tag-icon" [src]="'/assets/icons/' + tag.iconKey + '.svg'" alt="" width="12" height="12">
+                } @else if (tag.customIconUrl) {
+                  <img class="tag-icon" [src]="tag.customIconUrl" alt="" width="12" height="12">
+                }
+                {{ tag.name }}
+              </span>
+            }
+            @if (proj.downloads) {
+              <span class="mtag green">⬇️ {{ proj.downloads }}</span>
+            }
           </div>
 
-          <p class="modal-desc">{{ selectedProject().description }}</p>
-
-          @if (selectedProject().marketLink) {
-            <a [href]="selectedProject().marketLink" target="_blank" class="btn-primary">
-              View on Store →
-            </a>
+          @if (proj.marketLink) {
+            <a [href]="proj.marketLink" target="_blank" class="btn-primary"> View on Store → </a>
           }
         </div>
       </div>
     </div>
   }
-
 </div>

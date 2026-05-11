@@ -5,6 +5,8 @@ export const API_CONFIG = {
   endpoints: {
     project: 'Project',
     auth: 'auth',
-    profile: 'profile'
+    profile: 'profile',
+    tags: 'Tags',
+    contactMethods: 'ContactMethods'
   }
 };
