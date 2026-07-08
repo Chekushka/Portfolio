@@ -24,7 +24,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Project>()
             .HasOne<UserProfile>()
             .WithMany()
-            .HasForeignKey(p => p.ProfileId);
+            .HasForeignKey(p => p.ProfileId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<UserProfile>()
             .HasIndex(p => p.Slug)
