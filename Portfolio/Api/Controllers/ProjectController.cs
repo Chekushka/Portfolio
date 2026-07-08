@@ -153,9 +153,13 @@ public class ProjectController : ControllerBase
         if (project == null) return NotFound();
 
         var siblings = await _context.Projects
+            .Include(p => p.Tags)
             .Where(p => p.ProfileId == project.ProfileId)
             .OrderBy(p => p.Order)
             .ToListAsync();
+
+        if (request.Direction != "up" && request.Direction != "down")
+            return BadRequest("Direction must be 'up' or 'down'.");
 
         var index = siblings.FindIndex(p => p.Id == id);
         var newIndex = index + (request.Direction == "up" ? -1 : 1);
