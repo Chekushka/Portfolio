@@ -10,5 +10,7 @@ public class ProjectResponse
     public string? VideoUrl { get; set; }
     public string? MarketLink { get; set; }
     public string? PreviewImageUrl { get; set; }
+    public int ProfileId { get; set; }
+    public int Order { get; set; }
     public List<TagDto> Tags { get; set; } = new();
 }

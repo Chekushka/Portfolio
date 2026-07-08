@@ -9,5 +9,6 @@ public class ProjectRequest
     public string? VideoUrl { get; set; }
     public string? MarketLink { get; set; }
     public string? PreviewImageUrl { get; set; }
+    public int ProfileId { get; set; }
     public List<int> TagIds { get; set; } = new();
 }

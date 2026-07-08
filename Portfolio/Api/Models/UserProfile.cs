@@ -1,4 +1,4 @@
-﻿namespace Portfolio.Api.Models;
+namespace Portfolio.Api.Models;
 
 public class UserProfile
 {
@@ -9,4 +9,6 @@ public class UserProfile
     public string PhotoUrl { get; set; } = string.Empty;
     public string CvUrl { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public string ThemeKey { get; set; } = "unity";
 }

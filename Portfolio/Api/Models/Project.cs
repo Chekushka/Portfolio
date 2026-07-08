@@ -10,5 +10,7 @@ public class Project
     public string? VideoUrl { get; set; }
     public string? MarketLink { get; set; }
     public string? PreviewImageUrl { get; set; }
+    public int ProfileId { get; set; }
+    public int Order { get; set; }
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
