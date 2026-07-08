@@ -1,31 +1,57 @@
 <div class="admin-container">
+  <div class="profile-switcher">
+    <button [class.active]="activeProfileSlug() === 'unity'" (click)="switchProfile('unity')">
+      Unity
+    </button>
+    <button [class.active]="activeProfileSlug() === 'dotnet'" (click)="switchProfile('dotnet')">
+      .NET
+    </button>
+  </div>
 
   <nav class="admin-tabs">
-    <button [class.active]="activeTab() === 'projects'" (click)="activeTab.set('projects')">Projects</button>
+    <button [class.active]="activeTab() === 'projects'" (click)="activeTab.set('projects')">
+      Projects
+    </button>
     <button [class.active]="activeTab() === 'tags'" (click)="activeTab.set('tags')">Tags</button>
-    <button [class.active]="activeTab() === 'contact'" (click)="activeTab.set('contact')">Contact</button>
-    <button [class.active]="activeTab() === 'profile'" (click)="activeTab.set('profile')">Profile</button>
+    <button [class.active]="activeTab() === 'contact'" (click)="activeTab.set('contact')">
+      Contact
+    </button>
+    <button [class.active]="activeTab() === 'profile'" (click)="activeTab.set('profile')">
+      Profile
+    </button>
   </nav>
 
   <!-- ===== PROFILE TAB ===== -->
   @if (activeTab() === 'profile') {
     <section class="form-section">
-      <h2>Profile Settings</h2>
+      <h2>Profile Settings — {{ activeProfile()?.name ?? 'Loading...' }}</h2>
       <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
-        <div class="form-row">
-          <input formControlName="name" placeholder="Your Name *">
-          <input formControlName="role" placeholder="Your Role (e.g., Unity Developer) *">
+        <div class="form-field">
+          <label class="field-label">Profile Slug (read-only)</label>
+          <input [value]="activeProfile()?.slug ?? ''" readonly class="slug-readonly" />
         </div>
         <div class="form-row">
-          <input formControlName="email" placeholder="Contact Email">
-          <input formControlName="cvUrl" placeholder="Link to CV (Google Drive/PDF)">
+          <input formControlName="name" placeholder="Your Name *" />
+          <input formControlName="role" placeholder="Your Role (e.g., Unity Developer) *" />
         </div>
         <div class="form-row">
-          <input formControlName="photoUrl" placeholder="Link to Profile Photo">
+          <input formControlName="email" placeholder="Contact Email" />
+          <input formControlName="cvUrl" placeholder="Link to CV (Google Drive/PDF)" />
         </div>
-        <textarea formControlName="bio" placeholder="Short Bio about yourself..." rows="3"></textarea>
+        <div class="form-row">
+          <input formControlName="photoUrl" placeholder="Link to Profile Photo" />
+        </div>
+        <textarea
+          formControlName="bio"
+          placeholder="Short Bio about yourself..."
+          rows="3"
+        ></textarea>
         <div class="form-actions">
-          <button type="submit" class="btn-primary" [disabled]="profileForm.invalid || isSubmittingProfile">
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="profileForm.invalid || isSubmittingProfile"
+          >
             Save Profile Settings
           </button>
         </div>
@@ -39,26 +65,29 @@
       <h2>{{ editingProjectId() ? 'Edit Project' : 'Add New Project' }}</h2>
       <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <div class="form-row">
-          <input formControlName="name" placeholder="Project Name *">
-          <input formControlName="downloads" placeholder="Downloads count">
+          <input formControlName="name" placeholder="Project Name *" />
+          <input formControlName="downloads" placeholder="Downloads count" />
         </div>
         <div class="form-row">
-          <input formControlName="previewImageUrl" placeholder="Preview Image URL (.jpg, .png)">
-          <input formControlName="videoUrl" placeholder="Direct Video URL (.mp4)">
+          <input formControlName="previewImageUrl" placeholder="Preview Image URL (.jpg, .png)" />
+          <input formControlName="videoUrl" placeholder="Direct Video URL (.mp4)" />
         </div>
         <div class="form-row">
-          <input formControlName="marketLink" placeholder="Link to Store (Google Play, App Store, etc.)">
+          <input
+            formControlName="marketLink"
+            placeholder="Link to Store (Google Play, App Store, etc.)"
+          />
         </div>
 
         <div class="form-field">
           <label class="field-label">Video Layout</label>
           <div class="radio-group">
             <label class="radio-label">
-              <input type="radio" formControlName="videoLayout" value="above">
+              <input type="radio" formControlName="videoLayout" value="above" />
               Video above description
             </label>
             <label class="radio-label">
-              <input type="radio" formControlName="videoLayout" value="side">
+              <input type="radio" formControlName="videoLayout" value="side" />
               Video beside description
             </label>
           </div>
@@ -76,7 +105,8 @@
                 class="tag-chip"
                 [class.selected]="selectedTagIds().includes(tag.id)"
                 [style.--tag-color]="tag.color"
-                (click)="toggleTag(tag.id)">
+                (click)="toggleTag(tag.id)"
+              >
                 {{ tag.name }}
               </button>
             }
@@ -89,7 +119,11 @@
         </div>
 
         <div class="form-actions">
-          <button type="submit" class="btn-primary" [disabled]="projectForm.invalid || isSubmittingProject">
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="projectForm.invalid || isSubmittingProject"
+          >
             {{ editingProjectId() ? 'Update Project' : 'Save Project' }}
           </button>
           @if (editingProjectId()) {
@@ -100,23 +134,43 @@
     </section>
 
     <section class="list-section">
-      <h2>Projects List</h2>
+      <h2>Projects — {{ activeProfile()?.name ?? 'Loading...' }}</h2>
       <div class="admin-list">
         @if (projects().length === 0) {
           <p class="empty-state">No projects yet. Add your first project above!</p>
         } @else {
-          @for (project of projects(); track project.id) {
+          @for (project of projects(); track project.id; let i = $index) {
             <div class="admin-card">
               <div class="project-info">
                 <h3>{{ project.name }}</h3>
                 <div class="project-tag-list">
                   @for (tag of project.tags; track tag.id) {
-                    <span class="tag-badge" [style.background-color]="tag.color">{{ tag.name }}</span>
+                    <span class="tag-badge" [style.background-color]="tag.color">{{
+                      tag.name
+                    }}</span>
                   }
                 </div>
-                <p class="meta">{{ project.downloads }} downloads • {{ project.videoLayout }} layout</p>
+                <p class="meta">
+                  {{ project.downloads }} downloads • {{ project.videoLayout }} layout
+                </p>
               </div>
               <div class="actions">
+                <button
+                  class="btn-edit"
+                  (click)="moveProject(project.id, 'up')"
+                  [disabled]="i === 0"
+                  title="Move up"
+                >
+                  ↑
+                </button>
+                <button
+                  class="btn-edit"
+                  (click)="moveProject(project.id, 'down')"
+                  [disabled]="i === projects().length - 1"
+                  title="Move down"
+                >
+                  ↓
+                </button>
                 <button class="btn-edit" (click)="editProject(project)">Edit</button>
                 <button class="btn-delete" (click)="deleteProject(project.id)">Delete</button>
               </div>
@@ -133,10 +187,10 @@
       <h2>{{ editingTagId() ? 'Edit Tag' : 'Create Tag' }}</h2>
       <form [formGroup]="tagForm" (ngSubmit)="onTagSubmit()">
         <div class="form-row">
-          <input formControlName="name" placeholder="Tag name *">
+          <input formControlName="name" placeholder="Tag name *" />
           <div class="color-field">
             <label class="field-label">Color</label>
-            <input type="color" formControlName="color" class="color-input">
+            <input type="color" formControlName="color" class="color-input" />
           </div>
         </div>
         <div class="form-field">
@@ -186,15 +240,19 @@
       } @else {
         <form [formGroup]="contactForm" (ngSubmit)="onContactSubmit()">
           <div class="form-row">
-            <input formControlName="label" placeholder="Label (e.g. LinkedIn) *">
-            <input formControlName="url" placeholder="URL or mailto:… *">
+            <input formControlName="label" placeholder="Label (e.g. LinkedIn) *" />
+            <input formControlName="url" placeholder="URL or mailto:… *" />
           </div>
           <div class="form-field">
             <label class="field-label">Icon</label>
             <app-icon-picker formControlName="icon" />
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn-primary" [disabled]="contactForm.invalid || isSubmittingContact">
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="contactForm.invalid || isSubmittingContact"
+            >
               {{ editingContactId() ? 'Update' : 'Add Contact Method' }}
             </button>
             @if (editingContactId()) {
@@ -215,13 +273,25 @@
             <div class="admin-card">
               <div class="contact-info">
                 @if (method.iconKey) {
-                  <img class="contact-icon-preview" [src]="'/assets/icons/' + method.iconKey + '.svg'"
-                       [alt]="method.label" width="28" height="28">
+                  <img
+                    class="contact-icon-preview"
+                    [src]="'/assets/icons/' + method.iconKey + '.svg'"
+                    [alt]="method.label"
+                    width="28"
+                    height="28"
+                  />
                 } @else if (method.customIconUrl) {
-                  <img class="contact-icon-preview" [src]="method.customIconUrl"
-                       [alt]="method.label" width="28" height="28">
+                  <img
+                    class="contact-icon-preview"
+                    [src]="method.customIconUrl"
+                    [alt]="method.label"
+                    width="28"
+                    height="28"
+                  />
                 } @else {
-                  <span class="contact-icon-placeholder">{{ method.label.slice(0,2).toUpperCase() }}</span>
+                  <span class="contact-icon-placeholder">{{
+                    method.label.slice(0, 2).toUpperCase()
+                  }}</span>
                 }
                 <div>
                   <strong>{{ method.label }}</strong>
@@ -229,8 +299,22 @@
                 </div>
               </div>
               <div class="actions">
-                <button class="btn-edit" (click)="moveContact(i, -1)" [disabled]="i === 0" title="Move up">↑</button>
-                <button class="btn-edit" (click)="moveContact(i, 1)" [disabled]="i === contactMethods().length - 1" title="Move down">↓</button>
+                <button
+                  class="btn-edit"
+                  (click)="moveContact(i, -1)"
+                  [disabled]="i === 0"
+                  title="Move up"
+                >
+                  ↑
+                </button>
+                <button
+                  class="btn-edit"
+                  (click)="moveContact(i, 1)"
+                  [disabled]="i === contactMethods().length - 1"
+                  title="Move down"
+                >
+                  ↓
+                </button>
                 <button class="btn-edit" (click)="editContact(method)">Edit</button>
                 <button class="btn-delete" (click)="deleteContact(method.id)">Delete</button>
               </div>
@@ -240,5 +324,4 @@
       </div>
     </section>
   }
-
 </div>

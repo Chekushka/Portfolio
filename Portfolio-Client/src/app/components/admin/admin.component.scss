@@ -149,6 +149,44 @@ button {
   }
 }
 
+.profile-switcher {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+
+  button {
+    padding: 6px 20px;
+    background: var(--g-card);
+    color: var(--g-muted);
+    border: 2px solid var(--g-border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.15s;
+
+    &:hover {
+      color: var(--g-text);
+      border-color: var(--g-primary);
+      transform: none;
+      opacity: 1;
+    }
+
+    &.active {
+      background: var(--g-primary);
+      color: #fff;
+      border-color: var(--g-primary);
+    }
+  }
+}
+
+.slug-readonly {
+  background: var(--g-border) !important;
+  color: var(--g-muted);
+  cursor: default;
+  font-family: monospace;
+}
+
 .admin-tabs {
   display: flex;
   gap: 4px;

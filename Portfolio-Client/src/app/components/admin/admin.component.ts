@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { ProjectService, Project, ProjectRequest } from '../../services/project.service';
-import { ProfileService } from '../../services/profile.service';
+import { ProfileService, UserProfile } from '../../services/profile.service';
 import { TagService, Tag, TagRequest } from '../../services/tag.service';
 import { ContactMethodService, ContactMethod, ContactMethodRequest } from '../../services/contact-method.service';
 import { MarkdownEditorComponent } from '../markdown-editor/markdown-editor.component';
@@ -22,6 +23,9 @@ export class AdminComponent implements OnInit {
   private contactMethodService = inject(ContactMethodService);
 
   activeTab = signal<'profile' | 'projects' | 'tags' | 'contact'>('projects');
+  profiles = signal<UserProfile[]>([]);
+  activeProfileSlug = signal<string>('unity');
+  activeProfile = computed(() => this.profiles().find(p => p.slug === this.activeProfileSlug()));
   projects = signal<Project[]>([]);
   allTags = signal<Tag[]>([]);
   contactMethods = signal<ContactMethod[]>([]);
@@ -65,23 +69,37 @@ export class AdminComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.loadProjects();
-    this.loadProfile();
+    this.loadProfiles();
     this.loadTags();
     this.loadContactMethods();
   }
 
-  loadProjects() {
-    this.projectService.getProjects().subscribe({
-      next: (data) => this.projects.set(data),
-      error: (err) => console.error('Failed to load projects', err)
+  loadProfiles() {
+    forkJoin([
+      this.profileService.getBySlug('unity'),
+      this.profileService.getBySlug('dotnet')
+    ]).subscribe({
+      next: ([unity, dotnet]) => {
+        this.profiles.set([unity, dotnet]);
+        this.profileForm.patchValue(this.activeProfile()!);
+        this.loadProjects();
+      },
+      error: (err) => console.error('Failed to load profiles', err)
     });
   }
 
-  loadProfile() {
-    this.profileService.getProfile().subscribe({
-      next: (data) => { if (data) this.profileForm.patchValue(data); },
-      error: (err) => console.error('Failed to load profile', err)
+  switchProfile(slug: string) {
+    this.activeProfileSlug.set(slug);
+    this.cancelEdit();
+    this.profileForm.patchValue(this.activeProfile()!);
+    this.loadProjects();
+  }
+
+  loadProjects() {
+    const profileId = this.activeProfile()?.id ?? 1;
+    this.projectService.getByProfileId(profileId).subscribe({
+      next: (data) => this.projects.set(data),
+      error: (err) => console.error('Failed to load projects', err)
     });
   }
 
@@ -102,7 +120,16 @@ export class AdminComponent implements OnInit {
   onProfileSubmit() {
     if (this.profileForm.invalid || this.isSubmittingProfile) return;
     this.isSubmittingProfile = true;
-    this.profileService.updateProfile(this.profileForm.value).subscribe({
+    const slug = this.activeProfileSlug();
+    const { name, role, bio, photoUrl, cvUrl, email } = this.profileForm.value;
+    this.profileService.updateBySlug(slug, {
+      name: name ?? '',
+      role: role ?? '',
+      bio: bio ?? '',
+      photoUrl: photoUrl ?? '',
+      cvUrl: cvUrl ?? '',
+      email: email ?? ''
+    }).subscribe({
       next: () => { alert('Profile updated successfully!'); this.isSubmittingProfile = false; },
       error: () => { this.isSubmittingProfile = false; }
     });
@@ -113,8 +140,9 @@ export class AdminComponent implements OnInit {
     this.isSubmittingProject = true;
     const id = this.editingProjectId();
     const projectData: ProjectRequest = {
-      ...(this.projectForm.value as Omit<ProjectRequest, 'tagIds'>),
-      tagIds: this.selectedTagIds()
+      ...(this.projectForm.value as Omit<ProjectRequest, 'tagIds' | 'profileId'>),
+      tagIds: this.selectedTagIds(),
+      profileId: this.activeProfile()?.id ?? 1
     };
     if (id) {
       this.projectService.updateProject(id, projectData).subscribe({
@@ -283,6 +311,13 @@ export class AdminComponent implements OnInit {
         error: (err) => console.error('Delete contact failed', err)
       });
     }
+  }
+
+  moveProject(id: number, direction: 'up' | 'down') {
+    this.projectService.reorderProject(id, direction).subscribe({
+      next: (updated) => this.projects.set(updated),
+      error: (err) => console.error('Reorder failed', err)
+    });
   }
 
   moveContact(index: number, direction: -1 | 1) {
