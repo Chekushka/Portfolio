@@ -1,0 +1,56 @@
+<div class="chooser">
+  <!-- Unity Half -->
+  <div
+    class="half half-unity"
+    [class.expanded]="hoveredSlug() === 'unity'"
+    [class.shrunk]="hoveredSlug() === 'dotnet'"
+    (mouseenter)="hoveredSlug.set('unity')"
+    (mouseleave)="hoveredSlug.set(null)"
+    (click)="navigate('unity')"
+    (keydown.enter)="navigate('unity')"
+    (keydown.space)="navigate('unity')"
+    tabindex="0"
+    role="button"
+    aria-label="View Unity Developer profile"
+  >
+    <div class="half-bg unity-bg" aria-hidden="true"></div>
+    <div class="half-content">
+      <div class="half-eyebrow">GAME DEVELOPER</div>
+      <h2 class="half-name">{{ unityProfile()?.name || 'Serhii Chekun' }}</h2>
+      <p class="half-role">{{ unityProfile()?.role || 'Unity & Mobile' }}</p>
+      <div class="half-cta">View Profile →</div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider" aria-hidden="true"></div>
+
+  <!-- .NET Half -->
+  <div
+    class="half half-dotnet"
+    [class.expanded]="hoveredSlug() === 'dotnet'"
+    [class.shrunk]="hoveredSlug() === 'unity'"
+    (mouseenter)="hoveredSlug.set('dotnet')"
+    (mouseleave)="hoveredSlug.set(null)"
+    (click)="navigate('dotnet')"
+    (keydown.enter)="navigate('dotnet')"
+    (keydown.space)="navigate('dotnet')"
+    tabindex="0"
+    role="button"
+    aria-label="View .NET Developer profile"
+  >
+    <div class="half-bg dotnet-bg" aria-hidden="true">
+      <span class="dp-sym s1">&#123;&#125;</span>
+      <span class="dp-sym s2">&lt;/&gt;</span>
+      <span class="dp-sym s3">[]</span>
+      <span class="dp-sym s4">=&gt;</span>
+      <span class="dp-sym s5">&lt;T&gt;</span>
+    </div>
+    <div class="half-content">
+      <div class="half-eyebrow dotnet-eyebrow">.NET DEVELOPER</div>
+      <h2 class="half-name dotnet-name">{{ dotnetProfile()?.name || 'Serhii Chekun' }}</h2>
+      <p class="half-role dotnet-role">{{ dotnetProfile()?.role || 'ASP.NET Core & C#' }}</p>
+      <div class="half-cta dotnet-cta">View Profile →</div>
+    </div>
+  </div>
+</div>

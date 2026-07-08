@@ -1,0 +1,171 @@
+.chooser {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.half {
+  position: relative;
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+
+  &.expanded { width: 65%; }
+  &.shrunk   { width: 35%; }
+
+  &:focus-visible {
+    outline: 3px solid white;
+    outline-offset: -3px;
+  }
+}
+
+.half-unity {
+  background: oklch(97.5% 0.008 75);
+}
+
+.unity-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 40% 45%, oklch(94% 0.07 75 / 0.6), transparent 70%),
+    linear-gradient(oklch(70% 0.22 75 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.22 75 / 0.12) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+}
+
+.half-dotnet {
+  background: #080808;
+}
+
+.dotnet-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 60% 50%, rgba(99, 102, 241, 0.1), transparent 70%);
+  overflow: hidden;
+}
+
+.dp-sym {
+  position: absolute;
+  font-family: 'Courier New', monospace;
+  color: rgba(255, 255, 255, 0.06);
+  animation: dpChooserFloat linear infinite;
+  user-select: none;
+}
+
+@keyframes dpChooserFloat {
+  from { transform: translateY(110vh); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.6; }
+  to   { transform: translateY(-10vh); opacity: 0; }
+}
+
+.s1 { left: 10%; font-size: 3rem;   animation-duration: 7s;  animation-delay: 0s;   }
+.s2 { left: 30%; font-size: 2rem;   animation-duration: 9s;  animation-delay: -2s;  }
+.s3 { left: 55%; font-size: 2.5rem; animation-duration: 6s;  animation-delay: -4s;  }
+.s4 { left: 70%; font-size: 1.5rem; animation-duration: 10s; animation-delay: -1s;  }
+.s5 { left: 85%; font-size: 2rem;   animation-duration: 8s;  animation-delay: -5s;  }
+
+.half-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .half:hover & { transform: scale(1.03); }
+}
+
+.half-eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: oklch(48% 0.24 278);
+  margin-bottom: 0.75rem;
+  font-family: 'Nunito', sans-serif;
+}
+
+.dotnet-eyebrow {
+  color: #6366f1;
+  font-family: 'Courier New', monospace;
+}
+
+.half-name {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: oklch(22% 0.018 265);
+  margin: 0 0 0.5rem;
+  font-family: 'Fredoka', sans-serif;
+}
+
+.dotnet-name {
+  color: #ffffff;
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.half-role {
+  font-size: 1rem;
+  color: oklch(52% 0.025 265);
+  margin: 0 0 1.5rem;
+}
+
+.dotnet-role {
+  color: #555;
+  font-family: 'Courier New', monospace;
+}
+
+.half-cta {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  border: 1.5px solid oklch(48% 0.24 278);
+  color: oklch(48% 0.24 278);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s, transform 0.3s;
+
+  .half:hover & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dotnet-cta {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.divider {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(99, 102, 241, 0.3) 30%, oklch(78% 0.032 75) 50%, rgba(99, 102, 241, 0.3) 70%, transparent);
+  z-index: 2;
+  flex-shrink: 0;
+  transition: opacity 0.4s;
+}
+
+@media (max-width: 768px) {
+  .chooser {
+    flex-direction: column;
+  }
+
+  .half,
+  .half.expanded,
+  .half.shrunk {
+    width: 100%;
+    height: 50vh;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(99, 102, 241, 0.3), transparent);
+  }
+}
