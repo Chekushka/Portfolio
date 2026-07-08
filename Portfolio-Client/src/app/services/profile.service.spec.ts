@@ -27,8 +27,8 @@ describe('ProfileService', () => {
   });
 
   it('updateBySlug calls PUT on correct URL', () => {
-    const data = { name: 'Test', role: '.NET Dev', bio: '', photoUrl: '', cvUrl: '', email: '' };
-    service.updateBySlug('dotnet', data as any).subscribe();
+    const data: Partial<import('./profile.service').UserProfile> = { name: 'Test', role: '.NET Dev', bio: '', photoUrl: '', cvUrl: '', email: '' };
+    service.updateBySlug('dotnet', data).subscribe();
     const r = httpMock.expectOne(`${baseUrl}/dotnet`);
     expect(r.request.method).toBe('PUT');
     r.flush(null);
