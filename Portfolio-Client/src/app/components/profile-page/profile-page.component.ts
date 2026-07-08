@@ -1,0 +1,119 @@
+import {
+  Component, HostBinding, HostListener,
+  inject, OnInit, OnDestroy, signal, computed
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProjectService, Project } from '../../services/project.service';
+import { ProfileService, UserProfile } from '../../services/profile.service';
+import { ContactMethodService, ContactMethod } from '../../services/contact-method.service';
+import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
+import { MarkdownModule } from 'ngx-markdown';
+
+interface FloatingCoin {
+  id: number;
+  left: number;
+  value: number;
+  duration: number;
+}
+
+@Component({
+  selector: 'app-profile-page',
+  standalone: true,
+  imports: [CommonModule, SafeUrlPipe, MarkdownModule],
+  templateUrl: './profile-page.component.html',
+  styleUrl: './profile-page.component.scss'
+})
+export class ProfilePageComponent implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private projectService = inject(ProjectService);
+  private profileService = inject(ProfileService);
+  private contactMethodService = inject(ContactMethodService);
+
+  private coinIdCounter = 0;
+  private spawnInterval: ReturnType<typeof setInterval> | null = null;
+  private despawnTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
+
+  profile = signal<UserProfile>({ id: 0, name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: '', slug: '', themeKey: 'unity' });
+  projects = signal<Project[]>([]);
+  contactMethods = signal<ContactMethod[]>([]);
+  selectedProject = signal<Project | null>(null);
+  gameScore = signal<number>(0);
+  floatingCoins = signal<FloatingCoin[]>([]);
+
+  @HostBinding('class')
+  get themeClass(): string {
+    return `theme-${this.profile().themeKey || 'unity'}`;
+  }
+
+  isUnity = computed(() => this.profile().themeKey === 'unity');
+
+  ngOnInit(): void {
+    const slug = this.route.snapshot.paramMap.get('slug') ?? '';
+    this.profileService.getBySlug(slug).subscribe({
+      next: (data) => {
+        this.profile.set(data);
+        this.projectService.getByProfileId(data.id).subscribe(p => this.projects.set(p));
+      },
+      error: () => this.router.navigate([''])
+    });
+
+    this.contactMethodService.getMethods().subscribe(data => this.contactMethods.set(data));
+
+    setTimeout(() => this.spawnCoin(), 5000);
+    this.spawnInterval = setInterval(() => {
+      if (this.floatingCoins().length < 2) this.spawnCoin();
+    }, 10000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.spawnInterval) clearInterval(this.spawnInterval);
+    this.despawnTimeouts.forEach(t => clearTimeout(t));
+  }
+
+  private spawnCoin(): void {
+    const id = ++this.coinIdCounter;
+    const duration = 9 + Math.random() * 6;
+    const coin: FloatingCoin = {
+      id,
+      left: 6 + Math.random() * 88,
+      value: Math.random() < 0.65 ? 1 : Math.random() < 0.85 ? 3 : 5,
+      duration,
+    };
+    this.floatingCoins.update(coins => [...coins, coin]);
+    const timeout = setTimeout(() => this.despawnCoin(id), (duration + 0.5) * 1000);
+    this.despawnTimeouts.set(id, timeout);
+  }
+
+  catchCoin(coin: FloatingCoin): void {
+    this.gameScore.update(s => s + coin.value);
+    this.despawnCoin(coin.id);
+    setTimeout(() => this.spawnCoin(), 300);
+  }
+
+  private despawnCoin(id: number): void {
+    this.floatingCoins.update(coins => coins.filter(c => c.id !== id));
+    const t = this.despawnTimeouts.get(id);
+    if (t) { clearTimeout(t); this.despawnTimeouts.delete(id); }
+  }
+
+  formattedScore(): string {
+    return this.gameScore().toString().padStart(8, '0');
+  }
+
+  openProject(project: Project): void {
+    this.selectedProject.set(project);
+    document.documentElement.style.overflow = 'hidden';
+  }
+
+  closeProject(): void {
+    this.selectedProject.set(null);
+    document.documentElement.style.overflow = '';
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.selectedProject()) this.closeProject();
+  }
+}
