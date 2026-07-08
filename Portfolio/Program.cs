@@ -69,8 +69,8 @@ using (var scope = app.Services.CreateScope())
     if (!context.Projects.Any())
     {
         context.Projects.AddRange(
-            new Portfolio.Api.Models.Project { Name = "Coin Bubbles", Downloads = "50,000+" },
-            new Portfolio.Api.Models.Project { Name = "Money Clash", Downloads = "50,000+" }
+            new Portfolio.Api.Models.Project { Name = "Coin Bubbles", Downloads = "50,000+", ProfileId = 1, Order = 0 },
+            new Portfolio.Api.Models.Project { Name = "Money Clash", Downloads = "50,000+", ProfileId = 1, Order = 1 }
         );
         context.SaveChanges();
     }

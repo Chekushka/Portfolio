@@ -19,11 +19,13 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetProjects()
+    public async Task<IActionResult> GetProjects([FromQuery] int? profileId)
     {
-        var projects = await _context.Projects
-            .Include(p => p.Tags)
-            .ToListAsync();
+        var query = _context.Projects.Include(p => p.Tags).AsQueryable();
+        if (profileId.HasValue)
+            query = query.Where(p => p.ProfileId == profileId.Value);
+
+        var projects = await query.OrderBy(p => p.Order).ToListAsync();
 
         var response = projects.Select(p => new ProjectResponse
         {
@@ -35,7 +37,16 @@ public class ProjectController : ControllerBase
             VideoUrl = p.VideoUrl,
             MarketLink = p.MarketLink,
             PreviewImageUrl = p.PreviewImageUrl,
-            Tags = p.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name, Color = t.Color, IconKey = t.IconKey, CustomIconUrl = t.CustomIconUrl }).ToList()
+            ProfileId = p.ProfileId,
+            Order = p.Order,
+            Tags = p.Tags.Select(t => new TagDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Color = t.Color,
+                IconKey = t.IconKey,
+                CustomIconUrl = t.CustomIconUrl
+            }).ToList()
         });
 
         return Ok(response);
@@ -49,6 +60,10 @@ public class ProjectController : ControllerBase
             .Where(t => request.TagIds.Contains(t.Id))
             .ToListAsync();
 
+        var maxOrder = await _context.Projects
+            .Where(p => p.ProfileId == request.ProfileId)
+            .MaxAsync(p => (int?)p.Order) ?? -1;
+
         var project = new Project
         {
             Name = request.Name,
@@ -58,6 +73,8 @@ public class ProjectController : ControllerBase
             VideoUrl = request.VideoUrl,
             MarketLink = request.MarketLink,
             PreviewImageUrl = request.PreviewImageUrl,
+            ProfileId = request.ProfileId,
+            Order = maxOrder + 1,
             Tags = tags
         };
 
@@ -74,24 +91,19 @@ public class ProjectController : ControllerBase
             VideoUrl = project.VideoUrl,
             MarketLink = project.MarketLink,
             PreviewImageUrl = project.PreviewImageUrl,
-            Tags = project.Tags.Select(t => new TagDto { Id = t.Id, Name = t.Name, Color = t.Color, IconKey = t.IconKey, CustomIconUrl = t.CustomIconUrl }).ToList()
+            ProfileId = project.ProfileId,
+            Order = project.Order,
+            Tags = project.Tags.Select(t => new TagDto
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Color = t.Color,
+                IconKey = t.IconKey,
+                CustomIconUrl = t.CustomIconUrl
+            }).ToList()
         };
 
         return CreatedAtAction(nameof(GetProjects), new { id = project.Id }, response);
-    }
-
-    [Authorize]
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProject(int id)
-    {
-        var project = await _context.Projects.FindAsync(id);
-
-        if (project == null) return NotFound();
-
-        _context.Projects.Remove(project);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
     }
 
     [Authorize]
@@ -118,7 +130,63 @@ public class ProjectController : ControllerBase
         project.Tags = tags;
 
         await _context.SaveChangesAsync();
-
         return NoContent();
+    }
+
+    [Authorize]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProject(int id)
+    {
+        var project = await _context.Projects.FindAsync(id);
+        if (project == null) return NotFound();
+
+        _context.Projects.Remove(project);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpPut("{id}/order")]
+    public async Task<IActionResult> ReorderProject(int id, [FromBody] ReorderRequest request)
+    {
+        var project = await _context.Projects.FindAsync(id);
+        if (project == null) return NotFound();
+
+        var siblings = await _context.Projects
+            .Where(p => p.ProfileId == project.ProfileId)
+            .OrderBy(p => p.Order)
+            .ToListAsync();
+
+        var index = siblings.FindIndex(p => p.Id == id);
+        var newIndex = index + (request.Direction == "up" ? -1 : 1);
+
+        if (newIndex < 0 || newIndex >= siblings.Count)
+            return BadRequest("Project is already at the boundary.");
+
+        (siblings[index].Order, siblings[newIndex].Order) =
+            (siblings[newIndex].Order, siblings[index].Order);
+
+        await _context.SaveChangesAsync();
+
+        var response = siblings.OrderBy(p => p.Order).Select(p => new ProjectResponse
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            Downloads = p.Downloads,
+            VideoLayout = p.VideoLayout,
+            VideoUrl = p.VideoUrl,
+            MarketLink = p.MarketLink,
+            PreviewImageUrl = p.PreviewImageUrl,
+            ProfileId = p.ProfileId,
+            Order = p.Order,
+            Tags = p.Tags.Select(t => new TagDto
+            {
+                Id = t.Id, Name = t.Name, Color = t.Color,
+                IconKey = t.IconKey, CustomIconUrl = t.CustomIconUrl
+            }).ToList()
+        });
+
+        return Ok(response);
     }
 }
