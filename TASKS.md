@@ -22,8 +22,8 @@
 | Project reorder endpoint | ✅ | Swaps with sibling; 400 at boundary; returns list w/ Tags included. |
 | Project POST auto-Order | ✅ | `max(sibling)+1` per profile. |
 | Dev seed FK fix (`Program.cs`) | ✅ | Sets ProfileId=1/Order to survive fresh-DB startup. |
-| Legacy `/api/profile` GET/PUT (Id=1) | 🔶 | Still present alongside slug endpoints. PUT can wipe Slug/ThemeKey. Decide: keep or delete. |
-| `EnsureCreated()` removal | 🔶 | Must be gone now that migrations own the schema — **verify** (see Open Questions). |
+| Legacy `/api/profile` GET/PUT (Id=1) | ✅ | Removed — no in-repo caller, PUT could wipe Slug/ThemeKey. Slug-scoped endpoints are now the only profile routes. |
+| Schema via `Database.Migrate()` | ✅ | `Program.cs` calls `context.Database.Migrate()` on startup; no `EnsureCreated()` anywhere. |
 
 ## Frontend
 | Item | Status | Notes |
@@ -37,6 +37,7 @@
 | Admin ↑↓ order buttons | ✅ | Disabled at list boundaries; list refreshed from reorder response. |
 | Service unit tests (profile/project) | ✅ | Vitest + HttpTestingController. |
 | Dotnet profile content (projects) | ❌ | Profile row exists, zero projects. Needs real .NET project entries + copy. |
+| Theme scope fix | ❌ | Theme currently applies only inside `.portfolio-wrapper` via `@HostBinding` on the component host; page background (`body`) stays default, so the dotnet dark theme renders as a dark box on a light page. Fix: lift theming to body/`:root` level (toggle a body class in `ngOnInit`/`ngOnDestroy`, define themes as CSS variable sets in global `styles.scss`) so background and content share one theme source. (Theme *editability* was considered and rejected — themes stay seed-only; admin-editable, per-profile theme swapping is not planned.) |
 
 ## Infra / Content
 | Item | Status | Notes |
@@ -45,22 +46,20 @@
 | Seed placeholder data | 🔶 | Seeded Email `hello@example.com`, CvUrl `#`, placehold.co photos. Replace with real values. |
 | PostgreSQL prod cutover | ❌ | Provider is prod-ready but not exercised. Decide when to migrate off SQLite. |
 
+**Known debt:** the unused `Npgsql.EntityFrameworkCore.PostgreSQL` package reference has been
+removed from `Portfolio.csproj`. The March `InitialPostgres` migration remains structurally
+the first migration in the chain but is no longer Npgsql-annotated (annotations stripped so
+the build doesn't require the package) — it's harmless under SQLite either way. A full squash
+of the migration chain is only needed if a real Postgres cutover happens — defer until then.
+
 ## Open Questions
-- [ ] **`EnsureCreated()` vs migrations** — is `EnsureCreated()` fully removed from
-  `Program.cs`? If not, fresh-DB startup + `dotnet ef database update` will conflict.
-  This is a factual code-state check, not a design call — resolve by reading `Program.cs`
-  and delete this line once confirmed.
-- [ ] **Legacy `/api/profile` pair** — keep for backward compat or delete? The PUT is a
-  footgun (can null out Slug/ThemeKey). No known caller depends on it.
-- [ ] **Theme editability** — should `ThemeKey` become editable (admin dropdown), or stay
-  seed-only? Currently a third theme requires a migration + SCSS block. Design call.
-- [ ] **Global vs per-profile contact methods / tags** — currently global by design.
-  Confirm that's the intended long-term model before either profile's contact list grows.
-- [ ] **Prod DB** — timeline for SQLite → PostgreSQL cutover.
+None currently open. Global vs. per-profile contact methods/tags is resolved as "keep
+global by design" (single owner's data — see `AI_CONTEXT.md`'s Key Data Types note); the
+Postgres cutover question is resolved as "known debt, deferred" (see Infra/Content table
+above).
 
 ## Recommended Implementation Order
-1. Confirm/remove `EnsureCreated()` — unblocks any clean deploy or DB reset.
-2. Decide fate of the legacy `/api/profile` pair; delete or document.
-3. Replace placeholder seed values (email, CV, photos) with real data.
-4. Add real .NET projects to the dotnet profile (otherwise `/dotnet` renders an empty grid).
-5. Only then consider theme-editability and Postgres cutover.
+1. Replace placeholder seed values (email, CV, photos) with real data.
+2. Add real .NET projects to the dotnet profile (otherwise `/dotnet` renders an empty grid).
+3. Theme scope fix (see Frontend table) — background/content theme mismatch on the dotnet
+   profile.
