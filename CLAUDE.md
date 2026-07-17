@@ -75,7 +75,7 @@ Routes (**order matters** — `:slug` is greedy and must come after named paths)
 /          → ChooserComponent (split-screen Unity | .NET picker)
 /admin     → AdminComponent (authGuard)
 /login     → LoginComponent
-/:slug     → ProfilePageComponent (loads profile by slug, applies :host.theme-<key>)
+/:slug     → ProfilePageComponent (loads profile by slug, applies theme-<key> to document.body)
 /**        → redirect to /
 ```
 
@@ -104,8 +104,12 @@ both the tag form and contact-method form. Value type:
 ## Key Constraints
 
 - **Profiles are a fixed set of two** (seeded). Don't add create/delete-profile logic.
-- **`ThemeKey` is seed-only.** A new/changed theme = migration + a `:host.theme-X` SCSS
-  block in `profile-page.component.scss`, not an admin action.
+- **`ThemeKey` is seed-only.** A new/changed theme = migration + a `body.theme-X` block in
+  `styles.scss`, not an admin action. Theming lives on `document.body` (base neutral +
+  `body.theme-unity`/`body.theme-dotnet`), not a `:host.theme-*` class on the component —
+  `ProfilePageComponent` toggles `theme-<key>` on `document.body` via `Renderer2` once the
+  profile resolves, and removes it in `ngOnDestroy`. Chooser/admin/login carry no theme
+  class and render against the shared `$neutral-bg` base.
 - **Prefer `PUT /api/profile/{slug}`** over the legacy `PUT /api/profile` (no slug); the
   legacy one forces `Id=1` and can overwrite `Slug`/`ThemeKey` with empty strings.
 - **`Downloads` is a string** display field, not an int.

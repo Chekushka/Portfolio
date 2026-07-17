@@ -1,8 +1,8 @@
 import {
-  Component, HostBinding, HostListener,
+  Component, HostListener, Renderer2,
   inject, OnInit, OnDestroy, signal, computed
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService, Project } from '../../services/project.service';
 import { ProfileService, UserProfile } from '../../services/profile.service';
@@ -30,10 +30,13 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
   private profileService = inject(ProfileService);
   private contactMethodService = inject(ContactMethodService);
+  private renderer = inject(Renderer2);
+  private document = inject(DOCUMENT);
 
   private coinIdCounter = 0;
   private spawnInterval: ReturnType<typeof setInterval> | null = null;
   private despawnTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
+  private bodyThemeClass: string | null = null;
 
   profile = signal<UserProfile>({ id: 0, name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: '', slug: '', themeKey: 'unity' });
   projects = signal<Project[]>([]);
@@ -42,11 +45,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   gameScore = signal<number>(0);
   floatingCoins = signal<FloatingCoin[]>([]);
 
-  @HostBinding('class')
-  get themeClass(): string {
-    return `theme-${this.profile().themeKey || 'unity'}`;
-  }
-
   isUnity = computed(() => this.profile().themeKey === 'unity');
 
   ngOnInit(): void {
@@ -54,6 +52,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.profileService.getBySlug(slug).subscribe({
       next: (data) => {
         this.profile.set(data);
+        this.applyBodyTheme(data.themeKey || 'unity');
         this.projectService.getByProfileId(data.id).subscribe(p => this.projects.set(p));
       },
       error: () => this.router.navigate([''])
@@ -70,6 +69,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.spawnInterval) clearInterval(this.spawnInterval);
     this.despawnTimeouts.forEach(t => clearTimeout(t));
+    if (this.bodyThemeClass) {
+      this.renderer.removeClass(this.document.body, this.bodyThemeClass);
+    }
+  }
+
+  private applyBodyTheme(themeKey: string): void {
+    if (this.bodyThemeClass) {
+      this.renderer.removeClass(this.document.body, this.bodyThemeClass);
+    }
+    this.bodyThemeClass = `theme-${themeKey}`;
+    this.renderer.addClass(this.document.body, this.bodyThemeClass);
   }
 
   private spawnCoin(): void {

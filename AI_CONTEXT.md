@@ -29,7 +29,7 @@ Fuller design/implementation record: `docs/superpowers/2026-07-08-multi-profile.
 | Frontend | Angular 21, **standalone components only** | No NgModules anywhere |
 | FE reactivity | Signals (`signal()`, `computed()`) + `inject()` DI | RxJS only where `HttpClient` forces Observables |
 | FE tests | Vitest + Angular TestBed + `HttpTestingController` | |
-| Styling | SCSS, CSS custom properties, `@keyframes` | Theme = a set of CSS var overrides under `:host.theme-*` |
+| Styling | SCSS, CSS custom properties, `@keyframes` | Theme = a set of CSS var/background overrides under `body.theme-*` in `styles.scss`, applied to `document.body` |
 | Hosting | Docker + VPS, Let's Encrypt SSL | |
 
 Explicitly **not** used: NgModules, NgRx/RxJS state stores (signals instead),
@@ -63,7 +63,7 @@ Portfolio/                              ← ASP.NET Core 8 API
 
 Portfolio-Client/src/app/
   components/chooser/                   ← split-screen landing (Unity | .NET), root route
-  components/profile-page/              ← per-slug profile page + theme host class (was HomeComponent)
+  components/profile-page/              ← per-slug profile page; applies theme-<key> to document.body (was HomeComponent)
   components/admin/                     ← CMS panel: profile switcher, project CRUD, ordering
   components/login/                     ←
   components/icon-picker/               ← ControlValueAccessor for SVG/custom-URL icons
@@ -85,14 +85,15 @@ carried into `profile-page/`. Any reference to `HomeComponent` is stale.
 UserProfile
   Id, Name, Role, Bio, PhotoUrl, CvUrl, Email
   Slug        ← unique index; used for routing + all new API lookups
-  ThemeKey    ← default "unity"; drives :host.theme-<key> on the profile page
+  ThemeKey    ← default "unity"; drives body.theme-<key> (applied to document.body by ProfilePageComponent)
 ```
 Invariants:
 - Exactly **two** rows exist, seeded by `AddMultiProfile` (`Id=1` slug `unity`,
   `Id=2` slug `dotnet`). **No create/delete endpoint** — the set of profiles is fixed
   in the seed. Don't add multi-profile-create logic.
 - `ThemeKey` is **seed-only**. `UpdateProfileBySlug` does not touch it (nor `Slug`).
-  Changing a theme or adding a third = migration + a new `:host.theme-X` SCSS block.
+  Changing a theme or adding a third = migration + a new `body.theme-X` block in
+  `styles.scss`.
 
 ```
 Project
@@ -186,3 +187,13 @@ deliberate choice, not an oversight.
 - **`Downloads` is a string**, not a number — don't parse/increment it as int.
 - **FK is `Restrict`.** A profile with projects can't be deleted. Currently moot (no
   delete-profile endpoint), relevant if one is ever added.
+- **Theming lives on `document.body`, not the component host.** `styles.scss` defines a
+  neutral `$neutral-bg` base (`html`/`body`, no theme class) shared by the chooser, admin,
+  and login, plus `body.theme-unity` (warm grid, `body::before`) and `body.theme-dotnet`
+  (dark, card/modal/button overrides — moved here from the old `:host.theme-dotnet` rules
+  in `profile-page.component.scss`). `ProfilePageComponent` adds/removes `theme-<key>` on
+  `document.body` via `Renderer2` once the profile resolves (`themeKey` isn't known at
+  `ngOnInit`) and strips it in `ngOnDestroy`, so leaving a profile page never leaves a
+  theme class stuck on `body`. Don't reintroduce a `:host.theme-*`/`@HostBinding` pattern —
+  it scopes styles to the component instead of the full page, which is what caused the
+  chooser to inherit the unity grid before this fix.

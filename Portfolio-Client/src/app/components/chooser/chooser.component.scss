@@ -1,7 +1,11 @@
-// Neutral base shown when no half is hovered — tweak this to retheme.
-$chooser-neutral-bg: oklch(55% 0.005 265);
-
 .chooser {
+  // Idle opacity of each half's theme background layer — tweak to retheme.
+  --half-bg-idle: 0.55;
+
+  // Break out of the app shell's max-width:1280 content-wrapper to go full-bleed.
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+
   display: flex;
   height: 100vh;
   overflow: hidden;
@@ -26,15 +30,9 @@ $chooser-neutral-bg: oklch(55% 0.005 265);
   }
 }
 
-.half-unity,
-.half-dotnet {
-  background: $chooser-neutral-bg;
-}
-
 .unity-bg,
-.dotnet-bg,
-.dp-sym {
-  opacity: 0;
+.dotnet-bg {
+  opacity: var(--half-bg-idle, 0.55);
   transition: opacity 0.4s;
 
   .half:hover &,
@@ -46,8 +44,10 @@ $chooser-neutral-bg: oklch(55% 0.005 265);
 .unity-bg {
   position: absolute;
   inset: 0;
+  // Fixed-radius circle (not a %-sized ellipse) so the glow stays round instead of
+  // stretching into a thin stripe when the half's width animates on hover.
   background:
-    radial-gradient(ellipse 70% 60% at 40% 45%, oklch(94% 0.07 75 / 0.6), transparent 70%),
+    radial-gradient(circle 420px at 50% 45%, oklch(94% 0.07 75 / 0.6), transparent 70%),
     linear-gradient(oklch(70% 0.22 75 / 0.12) 1px, transparent 1px),
     linear-gradient(90deg, oklch(70% 0.22 75 / 0.12) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
@@ -56,7 +56,11 @@ $chooser-neutral-bg: oklch(55% 0.005 265);
 .dotnet-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 60% 50%, rgba(99, 102, 241, 0.1), transparent 70%);
+  // Same fixed-radius approach as .unity-bg, plus its own dark vignette so dotnet's
+  // white text stays legible without depending on how dark the shared neutral is.
+  background:
+    radial-gradient(circle 420px at 50% 50%, rgba(99, 102, 241, 0.18), transparent 60%),
+    radial-gradient(circle 460px at 50% 50%, rgba(8, 8, 16, 0.6), transparent 72%);
   overflow: hidden;
 }
 
@@ -111,6 +115,9 @@ $chooser-neutral-bg: oklch(55% 0.005 265);
   color: oklch(22% 0.018 265);
   margin: 0 0 0.5rem;
   font-family: 'Fredoka', sans-serif;
+  // Unity's near-black name text needs a light halo to stay legible against the
+  // dimmed idle backdrop (full contrast returns once the warm bg reveals on hover).
+  text-shadow: 0 0 14px oklch(97% 0 0 / 0.55);
 }
 
 .dotnet-name {

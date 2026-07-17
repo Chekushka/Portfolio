@@ -493,7 +493,10 @@
   position: absolute;
   inset: -4px;
   border-radius: 6px;
-  background: var(--c-primary);
+  // Amber on unity, indigo on dotnet (--c-amber is remapped in body.theme-dotnet) —
+  // was --c-primary, which is near-indigo on both themes and made the frame look
+  // identical across profiles.
+  background: var(--c-amber);
   z-index: 0;
 }
 
@@ -1073,49 +1076,9 @@
   filter: brightness(0) invert(1);
 }
 
-// ── Dotnet theme overrides ──────────────────────────────────────────────────
+// ── Dotnet-specific structural elements ───────────────────────────────────────
+// Hidden by default; toggled visible via `body.theme-dotnet` in styles.scss.
 
-:host.theme-dotnet {
-  display: block;
-  background: #080808;
-}
-
-:host.theme-dotnet .portfolio-wrapper {
-  --c-bg: #080808;
-  --c-surface: #0f0f0f;
-  --c-card: #111;
-  --c-border: #1e1e1e;
-  --c-border-strong: #2a2a2a;
-  --c-text: #ffffff;
-  --c-muted: #666;
-
-  --c-primary: #6366f1;
-  --c-primary-dark: #4f52d4;
-  --c-primary-lgt: #1a1a2e;
-  --c-primary-pale: #0d0d1a;
-
-  --c-amber: #6366f1;
-  --c-amber-dark: #4f52d4;
-  --c-amber-lgt: #1a1a2e;
-
-  --c-cherry: #6366f1;
-  --c-cherry-lgt: #1a1a2e;
-
-  --font-hero: system-ui, sans-serif;
-  --font-display: system-ui, sans-serif;
-  --font-body: system-ui, sans-serif;
-
-  background: #080808;
-}
-
-// Hide Unity-specific game elements on dotnet profile
-:host.theme-dotnet .bubble-coin,
-:host.theme-dotnet .hud,
-:host.theme-dotnet .bg-orbs {
-  display: none;
-}
-
-// Show dotnet-specific animated background
 .dotnet-particles {
   display: none;
   position: fixed;
@@ -1123,10 +1086,6 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-}
-
-:host.theme-dotnet .dotnet-particles {
-  display: block;
 }
 
 .dp-symbol {
@@ -1163,38 +1122,4 @@
   pointer-events: none;
   z-index: 0;
   background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(99, 102, 241, 0.08), transparent 70%);
-}
-
-:host.theme-dotnet .dotnet-accent {
-  display: block;
-}
-
-:host.theme-dotnet .eyebrow {
-  color: #6366f1;
-}
-
-:host.theme-dotnet .card-accent-bar {
-  background: linear-gradient(90deg, #6366f1, #818cf8);
-}
-
-:host.theme-dotnet .card {
-  background: #111;
-  border-color: #1e1e1e;
-}
-
-:host.theme-dotnet .card:hover {
-  border-color: #6366f1;
-}
-
-:host.theme-dotnet .modal {
-  background: #111;
-  border: 1px solid #1e1e1e;
-}
-
-:host.theme-dotnet .btn-primary {
-  background: #6366f1;
-}
-
-:host.theme-dotnet .btn-primary:hover {
-  background: #4f52d4;
 }
