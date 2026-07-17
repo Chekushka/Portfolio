@@ -1,6 +1,9 @@
 # Serhii Chekun — Developer Portfolio
 
-A full-stack portfolio app built to showcase indie game projects, with a live interactive mini-game right on the landing page. Built from scratch with a custom CMS-style admin panel so content stays fresh without touching code.
+A full-stack portfolio that presents **two developer profiles from one codebase** — a
+Unity/game-dev profile and a .NET profile — behind a split-screen chooser. Each profile
+has its own slug, theme, and independently ordered project list, all managed through a
+custom CMS-style admin panel so content stays fresh without touching code.
 
 **Live:** [chekuns.dev](https://chekuns.dev)
 
@@ -8,18 +11,27 @@ A full-stack portfolio app built to showcase indie game projects, with a live in
 
 ## What it does
 
-- **Public portfolio** — hero section, floating coin mini-game, project grid with video modal previews
-- **Admin panel** — full CRUD for projects, tags, profile, and contact links; protected by JWT auth
-- **Headless CMS feel** — all content (bio, games, downloads count, social links) is editable from the UI
+- **Split-screen chooser** — the landing page (`/`) is a 50/50 Unity | .NET picker that
+  expands on hover and is fully keyboard-navigable; it stacks vertically on mobile.
+- **Two themed profiles** — `/unity` (warm, game aesthetic with a floating-coin
+  mini-game) and `/dotnet` (monochrome dark with animated code-symbol particles). Theme is
+  driven by a `themeKey` on the profile and applied as a host CSS class.
+- **Per-profile project ordering** — projects belong to a profile and carry an explicit
+  order; the admin panel reorders them with ↑↓ buttons.
+- **Admin panel** — profile switcher plus full CRUD for projects, tags, profile info, and
+  contact links; protected by JWT auth.
+- **Headless CMS feel** — bio, projects, download counts, and social links are all
+  editable from the UI.
 
 ## Tech stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | Angular 21, TypeScript, SCSS |
-| Backend | ASP.NET Core 8, C# |
+| Frontend | Angular 21 (standalone components, signals), TypeScript, SCSS |
+| Backend | ASP.NET Core 8, C#, EF Core |
 | Database | SQLite (local) / PostgreSQL (prod-ready) |
 | Auth | JWT (1-hour expiry, auto-logout on 401) |
+| Tests | Vitest + Angular TestBed |
 | Hosting | Docker-ready; deployed on VPS with SSL |
 
 ## Project structure
@@ -35,25 +47,41 @@ Portfolio-Client/     ← Angular 21 SPA
 
 ```bash
 # Backend (from Portfolio/)
-dotnet run            # API on http://localhost:5177
+dotnet ef database update   # apply migrations (creates portfolio.db)
+dotnet run                  # API on http://localhost:5177
 
 # Frontend (from Portfolio-Client/)
 npm install
-ng serve              # App on http://localhost:4200
+ng serve                    # App on http://localhost:4200
 ```
 
-See [Portfolio/README.md](Portfolio/README.md) and [Portfolio-Client/README.md](Portfolio-Client/README.md) for detailed setup.
+See [Portfolio/README.md](Portfolio/README.md) and
+[Portfolio-Client/README.md](Portfolio-Client/README.md) for detailed setup.
 
 ---
 
 ## Highlights for recruiters
 
-**Signals-based reactivity** — Angular 21 signals replace RxJS subjects for auth state, keeping the reactive model simple and explicit.
+**One codebase, two audiences** — a single Angular app serves distinct Unity and .NET
+profiles selected at the root, each with its own routing slug, theme, and ordered content —
+no duplicated frontend.
 
-**JWT expiry on reconnect** — frontend decodes the `exp` claim on service initialization and clears stale tokens before any guard or API call fires.
+**Signals-based reactivity** — Angular 21 signals replace RxJS subjects for auth and view
+state, keeping the reactive model explicit; RxJS appears only where `HttpClient` requires
+it.
 
-**Pixel-art mini-game** — floating coins built entirely in CSS box-shadow (no canvas, no images). Keyboard-accessible.
+**JWT expiry on reconnect** — the frontend decodes the `exp` claim on service
+initialization and clears stale tokens before any guard or API call fires.
 
-**Clean REST API** — consistent `{ error: { code, message } }` error shape, correct HTTP status codes, no stack traces in responses.
+**Order-aware REST API** — projects are scoped and ordered per profile; a dedicated
+reorder endpoint swaps adjacent items server-side and returns the corrected list, with
+proper 400s at list boundaries.
 
-**One-command deploy** — Dockerfile included; SSL via Let's Encrypt; secrets via environment variable overrides.
+**Pixel-art mini-game** — floating coins built entirely in CSS `box-shadow` (no canvas, no
+images). Keyboard-accessible.
+
+**Clean REST API** — consistent `{ error: { code, message } }` error shape, correct HTTP
+status codes, no stack traces in responses.
+
+**One-command deploy** — Dockerfile included; SSL via Let's Encrypt; secrets via
+environment-variable overrides.
