@@ -17,13 +17,6 @@ public class ProfileController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetProfile()
-    {
-        var profile = await _context.Profiles.FindAsync(1);
-        return Ok(profile);
-    }
-
     [HttpGet("{slug}")]
     public async Task<IActionResult> GetProfileBySlug(string slug)
     {
@@ -31,16 +24,6 @@ public class ProfileController : ControllerBase
             .FirstOrDefaultAsync(p => p.Slug == slug);
         if (profile == null) return NotFound();
         return Ok(profile);
-    }
-
-    [Authorize]
-    [HttpPut]
-    public async Task<IActionResult> UpdateProfile([FromBody] UserProfile updatedProfile)
-    {
-        updatedProfile.Id = 1;
-        _context.Entry(updatedProfile).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-        return NoContent();
     }
 
     [Authorize]
