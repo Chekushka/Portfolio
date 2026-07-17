@@ -1,3 +1,6 @@
+// Neutral base shown when no half is hovered — tweak this to retheme.
+$chooser-neutral-bg: oklch(55% 0.005 265);
+
 .chooser {
   display: flex;
   height: 100vh;
@@ -23,8 +26,21 @@
   }
 }
 
-.half-unity {
-  background: oklch(97.5% 0.008 75);
+.half-unity,
+.half-dotnet {
+  background: $chooser-neutral-bg;
+}
+
+.unity-bg,
+.dotnet-bg,
+.dp-sym {
+  opacity: 0;
+  transition: opacity 0.4s;
+
+  .half:hover &,
+  .half.expanded & {
+    opacity: 1;
+  }
 }
 
 .unity-bg {
@@ -35,10 +51,6 @@
     linear-gradient(oklch(70% 0.22 75 / 0.12) 1px, transparent 1px),
     linear-gradient(90deg, oklch(70% 0.22 75 / 0.12) 1px, transparent 1px);
   background-size: auto, 40px 40px, 40px 40px;
-}
-
-.half-dotnet {
-  background: #080808;
 }
 
 .dotnet-bg {
