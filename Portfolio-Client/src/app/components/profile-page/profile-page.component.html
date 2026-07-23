@@ -45,20 +45,37 @@
       <p class="hero-bio">{{ profile().bio }}</p>
 
       <div class="hero-stats">
-        <div class="stat">
-          <div class="stat-num">{{ projects().length || 0 }}+</div>
-          <div class="stat-lbl">GAMES</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num">100K+</div>
-          <div class="stat-lbl">DOWNLOADS</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num">4+</div>
-          <div class="stat-lbl">YRS XP</div>
-        </div>
+        @if (isUnity()) {
+          <div class="stat">
+            <div class="stat-num">{{ projects().length || 0 }}+</div>
+            <div class="stat-lbl">GAMES</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">100K+</div>
+            <div class="stat-lbl">DOWNLOADS</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">4+</div>
+            <div class="stat-lbl">YRS XP</div>
+          </div>
+        } @else {
+          <div class="stat">
+            <div class="stat-num">{{ projects().length || 0 }}+</div>
+            <div class="stat-lbl">APIS</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">20+</div>
+            <div class="stat-lbl">ENDPOINTS</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-num">4+</div>
+            <div class="stat-lbl">YRS XP</div>
+          </div>
+        }
       </div>
 
       <div class="hero-actions">
@@ -107,9 +124,15 @@
         <div class="corner c-br"></div>
       </div>
 
-      <div class="badge b1">🎮 UNITY</div>
-      <div class="badge b2">📱 MOBILE</div>
-      <div class="badge b3">⬇️ 100K+</div>
+      @if (isUnity()) {
+        <div class="badge b1">🎮 UNITY</div>
+        <div class="badge b2">📱 MOBILE</div>
+        <div class="badge b3">⬇️ 100K+</div>
+      } @else {
+        <div class="badge b1">⚙️ ASP.NET CORE</div>
+        <div class="badge b2">🗄️ EF CORE</div>
+        <div class="badge b3">🔌 REST API</div>
+      }
     </div>
   </section>
 
