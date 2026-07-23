@@ -40,6 +40,11 @@ public class ProfileController : ControllerBase
         existing.PhotoUrl = updatedProfile.PhotoUrl;
         existing.CvUrl = updatedProfile.CvUrl;
         existing.Email = updatedProfile.Email;
+        existing.ProjectsStatLabel = updatedProfile.ProjectsStatLabel;
+        existing.Stat2Label = updatedProfile.Stat2Label;
+        existing.Stat2Value = updatedProfile.Stat2Value;
+        existing.Stat3Label = updatedProfile.Stat3Label;
+        existing.Stat3Value = updatedProfile.Stat3Value;
 
         await _context.SaveChangesAsync();
         return NoContent();
