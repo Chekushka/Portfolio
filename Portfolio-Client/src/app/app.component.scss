@@ -70,3 +70,37 @@
   background: var(--g-bg);
   letter-spacing: 0.5px;
 }
+
+// ── .NET theme — shell chrome (header/footer live outside ProfilePageComponent,
+// so they pick up the theme via this host class instead of body.theme-dotnet) ──
+:host(.theme-dotnet) {
+  .main-nav {
+    background: #0b0b0b;
+    border-bottom-color: #1e1e1e;
+  }
+
+  .logo {
+    color: #ffffff;
+  }
+
+  .links a {
+    color: #999;
+
+    &:hover {
+      color: #6366f1;
+      border-color: #1e1e1e;
+    }
+
+    &.active {
+      color: #6366f1;
+      background: #1a1a2e;
+      border-color: #2a2a2a;
+    }
+  }
+
+  .footer {
+    background: #0f0f0f;
+    border-top-color: #1e1e1e;
+    color: #999;
+  }
+}

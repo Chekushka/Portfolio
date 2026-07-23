@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProjectService, Project } from '../../services/project.service';
 import { ProfileService, UserProfile } from '../../services/profile.service';
 import { ContactMethodService, ContactMethod } from '../../services/contact-method.service';
+import { ThemeService } from '../../services/theme.service';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
 import { MarkdownModule } from 'ngx-markdown';
 
@@ -30,6 +31,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   private projectService = inject(ProjectService);
   private profileService = inject(ProfileService);
   private contactMethodService = inject(ContactMethodService);
+  private themeService = inject(ThemeService);
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
 
@@ -53,6 +55,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
       next: (data) => {
         this.profile.set(data);
         this.applyBodyTheme(data.themeKey || 'unity');
+        this.themeService.activeTheme.set(data.themeKey || 'unity');
         this.projectService.getByProfileId(data.id).subscribe(p => this.projects.set(p));
       },
       error: () => this.router.navigate([''])
@@ -72,6 +75,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     if (this.bodyThemeClass) {
       this.renderer.removeClass(this.document.body, this.bodyThemeClass);
     }
+    this.themeService.activeTheme.set(null);
   }
 
   private applyBodyTheme(themeKey: string): void {
