@@ -40,7 +40,8 @@
 | Theme scope fix | ✅ | Was stale in this file — actually fixed in `c0b14eec` (theming moved from `:host.theme-*` to `body.theme-*`, applied to `document.body` via `Renderer2`). See `AI_CONTEXT.md` Gotchas. |
 | Chooser preview panels (miniature /unity, /dotnet samples) | ✅ | Replaced the centered eyebrow/name/role/CTA text blob with a `.preview-panel` per half — paper/grid/coin/tag-chip sample for unity, dark/mono/code-symbol/pseudo-code sample for dotnet. Fluid via `clamp()` + `aspect-ratio`; verified at 1440/1024/390px and through the 35%–65% hover range. |
 | Avatar frame dotnet leak | ✅ | Real bug (not the one originally suspected in `.profile-glow`/`.corner`, which were already var-based and correctly remapped): `.hero-visual`'s background gradient used literal `oklch()` values, invisible to the `body.theme-dotnet` var remap, rendering as a muddy warm/gray box on dark. Fixed by routing it through new `--c-frame-glow-1`/`-2` tokens, remapped to indigo/dark in `styles.scss`. |
-| Theme-conditional hero badges/stats | ✅ | `isUnity()` (already existed) now gates the 3 floating badges and the 3-stat strip in `profile-page.component.html`. Dotnet: `ASP.NET CORE`/`EF CORE`/`REST API` badges, `APIS`/`ENDPOINTS`/`YRS XP` stats. Values are literal template strings, not parsed from `Downloads`. |
+| Theme-conditional hero badges | ✅ | `isUnity()` gates the 3 floating avatar badges only. Hardcoded per theme by design — out of scope for hero-stats work. |
+| Editable hero stats | ✅ | `UserProfile` gained `ProjectsStatLabel`/`Stat2Label`/`Stat2Value`/`Stat3Label`/`Stat3Value` (`AddProfileStats` migration, backfilled for both seeds). Slot 1 is a `computed()` over the loaded `projects` count with an editable label; slots 2/3 are free-form label+value pairs from the admin panel. A slot renders only when its label and value are both non-empty; the divider between slots is emitted only between visible entries, so 1/2/3 visible slots all render cleanly. |
 | Shell (nav/footer) theming | ✅ | New `ThemeService` (`activeTheme` signal) + `AppComponent` `@HostBinding('class')` returning `theme-<key>`/''. `ProfilePageComponent` sets/resets it alongside the existing body-class toggle. `app.component.scss` styles `.main-nav`/`.footer` under `:host(.theme-dotnet)`. Chooser/admin/login unaffected. |
 
 ## Infra / Content
@@ -57,11 +58,8 @@ the build doesn't require the package) — it's harmless under SQLite either way
 of the migration chain is only needed if a real Postgres cutover happens — defer until then.
 
 ## Open Questions
-- **Hero badges/stats: keep theme-hardcoded in the template, or promote to profile data
-  (requires migration)?** Currently `isUnity()` gates literal strings in
-  `profile-page.component.html` (badges + stat labels/numbers). Fine for two fixed
-  profiles; would need a schema change (e.g. a `HeroBadges`/`HeroStats` field or table)
-  if either profile's badges/stats need to change without a code deploy.
+
+**Resolved:** Hero stats were promoted to profile data (see Frontend table) — slot 1 derives from project count, slots 2/3 are admin-editable label/value pairs. The floating avatar badges around the hero photo remain hardcoded per theme; only the stats were in scope.
 
 Global vs. per-profile contact methods/tags is resolved as "keep global by design"
 (single owner's data — see `AI_CONTEXT.md`'s Key Data Types note); the Postgres cutover

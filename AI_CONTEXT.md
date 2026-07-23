@@ -86,6 +86,10 @@ UserProfile
   Id, Name, Role, Bio, PhotoUrl, CvUrl, Email
   Slug        ← unique index; used for routing + all new API lookups
   ThemeKey    ← default "unity"; drives body.theme-<key> (applied to document.body by ProfilePageComponent)
+  ProjectsStatLabel, Stat2Label, Stat2Value, Stat3Label, Stat3Value  ← nullable strings; hero-stat
+              content. Stat values are STRINGS (never parsed/summed), same rationale as Project.Downloads
+              — they carry suffixes like "+"/"K"/"M"/"%". Slot 1's value isn't stored: it's derived from
+              the profile's project count in ProfilePageComponent; only its label lives here.
 ```
 Invariants:
 - Exactly **two** rows exist, seeded by `AddMultiProfile` (`Id=1` slug `unity`,
