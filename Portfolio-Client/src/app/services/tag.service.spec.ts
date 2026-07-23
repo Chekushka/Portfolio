@@ -26,14 +26,14 @@ describe('TagService', () => {
   });
 
   it('createTag sends POST and returns created tag', () => {
-    const payload = { name: 'Unity', color: '#3b82f6' };
+    const payload = { name: 'Unity', color: '#3b82f6', iconKey: null, customIconUrl: null };
     service.createTag(payload).subscribe(tag => expect(tag.id).toBe(1));
     const req = httpMock.expectOne({ method: 'POST', url: baseUrl });
     req.flush({ id: 1, ...payload });
   });
 
   it('updateTag sends PUT to /Tags/:id', () => {
-    service.updateTag(1, { name: 'Updated', color: '#ff0000' }).subscribe();
+    service.updateTag(1, { name: 'Updated', color: '#ff0000', iconKey: null, customIconUrl: null }).subscribe();
     httpMock.expectOne({ method: 'PUT', url: `${baseUrl}/1` }).flush(null);
   });
 
