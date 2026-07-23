@@ -13,6 +13,11 @@ export interface UserProfile {
   email: string;
   slug: string;
   themeKey: string;
+  projectsStatLabel: string | null;
+  stat2Label: string | null;
+  stat2Value: string | null;
+  stat3Label: string | null;
+  stat3Value: string | null;
 }
 
 @Injectable({ providedIn: 'root' })

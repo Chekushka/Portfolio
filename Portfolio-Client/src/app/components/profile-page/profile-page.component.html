@@ -45,37 +45,14 @@
       <p class="hero-bio">{{ profile().bio }}</p>
 
       <div class="hero-stats">
-        @if (isUnity()) {
-          <div class="stat">
-            <div class="stat-num">{{ projects().length || 0 }}+</div>
-            <div class="stat-lbl">GAMES</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <div class="stat-num">100K+</div>
-            <div class="stat-lbl">DOWNLOADS</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <div class="stat-num">4+</div>
-            <div class="stat-lbl">YRS XP</div>
-          </div>
-        } @else {
-          <div class="stat">
-            <div class="stat-num">{{ projects().length || 0 }}+</div>
-            <div class="stat-lbl">APIS</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <div class="stat-num">20+</div>
-            <div class="stat-lbl">ENDPOINTS</div>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat">
-            <div class="stat-num">4+</div>
-            <div class="stat-lbl">YRS XP</div>
-          </div>
-        }
+        @for (stat of heroStats(); track stat.label; let last = $last) {
+        <div class="stat">
+          <div class="stat-num">{{ stat.value }}</div>
+          <div class="stat-lbl">{{ stat.label }}</div>
+        </div>
+        @if (!last) {
+        <div class="stat-divider"></div>
+        } }
       </div>
 
       <div class="hero-actions">

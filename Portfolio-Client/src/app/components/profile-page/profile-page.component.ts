@@ -40,7 +40,22 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   private despawnTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
   private bodyThemeClass: string | null = null;
 
-  profile = signal<UserProfile>({ id: 0, name: '', role: '', bio: '', photoUrl: '', cvUrl: '', email: '', slug: '', themeKey: 'unity' });
+  profile = signal<UserProfile>({
+    id: 0,
+    name: '',
+    role: '',
+    bio: '',
+    photoUrl: '',
+    cvUrl: '',
+    email: '',
+    slug: '',
+    themeKey: 'unity',
+    projectsStatLabel: null,
+    stat2Label: null,
+    stat2Value: null,
+    stat3Label: null,
+    stat3Value: null,
+  });
   projects = signal<Project[]>([]);
   contactMethods = signal<ContactMethod[]>([]);
   selectedProject = signal<Project | null>(null);
@@ -48,6 +63,26 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   floatingCoins = signal<FloatingCoin[]>([]);
 
   isUnity = computed(() => this.profile().themeKey === 'unity');
+
+  projectCount = computed(() => this.projects().length);
+
+  heroStats = computed<{ label: string; value: string }[]>(() => {
+    const p = this.profile();
+    const stats: { label: string; value: string }[] = [];
+    if (p.projectsStatLabel && this.projectCount() > 0) {
+      stats.push({
+        label: p.projectsStatLabel,
+        value: `${this.projectCount()}+`,
+      });
+    }
+    if (p.stat2Label && p.stat2Value) {
+      stats.push({ label: p.stat2Label, value: p.stat2Value });
+    }
+    if (p.stat3Label && p.stat3Value) {
+      stats.push({ label: p.stat3Label, value: p.stat3Value });
+    }
+    return stats;
+  });
 
   ngOnInit(): void {
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
