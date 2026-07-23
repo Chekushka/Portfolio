@@ -45,7 +45,7 @@
       <p class="hero-bio">{{ profile().bio }}</p>
 
       <div class="hero-stats">
-        @for (stat of heroStats(); track stat.label; let last = $last) {
+        @for (stat of heroStats(); track $index; let last = $last) {
         <div class="stat">
           <div class="stat-num">{{ stat.value }}</div>
           <div class="stat-lbl">{{ stat.label }}</div>
