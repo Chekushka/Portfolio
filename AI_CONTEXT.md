@@ -146,9 +146,21 @@ ProjectService           ✅   getProjects, getByProfileId, addProject, updatePr
   └─ HttpClient
 TagService               ✅
 ContactMethodService     ✅
+ThemeService             ✅   activeTheme signal<string|null>; UI-only state, no HttpClient —
+                              not 1:1 with a backend controller, see note below.
 authInterceptor          ✅   ← AuthService (token)
 authGuard                ✅   ← AuthService (isLoggedIn)
 ```
+
+**`ThemeService`** is the one exception to "one service per controller": it exists because
+the app shell (nav/footer in `AppComponent`) lives outside `ProfilePageComponent` and so
+never sees its `theme-<key>` host class or its `document.body` class toggle.
+`ProfilePageComponent` sets `themeService.activeTheme` to the resolved `themeKey` once the
+profile loads and resets it to `null` in `ngOnDestroy` (same lifecycle as the existing
+body-class toggle — see Gotchas). `AppComponent` reads it via
+`@HostBinding('class')` → `theme-<key>` or `''`, so `.main-nav`/`.footer` in
+`app.component.scss` can be styled under `:host(.theme-dotnet)`. Chooser/admin/login never
+set `activeTheme`, so the shell stays neutral on those routes.
 
 ## Coding Conventions
 
