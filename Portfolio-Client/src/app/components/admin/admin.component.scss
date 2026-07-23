@@ -232,6 +232,16 @@ button {
   margin-bottom: 1rem;
 }
 
+.subsection-heading {
+  font-size: 1.05rem;
+  margin: 0 0 4px;
+  color: var(--g-text);
+}
+
+.hero-stats-group .empty-hint {
+  margin-bottom: 0.75rem;
+}
+
 .radio-group {
   display: flex;
   gap: 1.5rem;

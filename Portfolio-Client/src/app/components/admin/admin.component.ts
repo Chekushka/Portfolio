@@ -43,7 +43,12 @@ export class AdminComponent implements OnInit {
     bio: new FormControl(''),
     photoUrl: new FormControl(''),
     cvUrl: new FormControl(''),
-    email: new FormControl('', Validators.email)
+    email: new FormControl('', Validators.email),
+    projectsStatLabel: new FormControl(''),
+    stat2Label: new FormControl(''),
+    stat2Value: new FormControl(''),
+    stat3Label: new FormControl(''),
+    stat3Value: new FormControl('')
   });
 
   projectForm = new FormGroup({
@@ -121,14 +126,19 @@ export class AdminComponent implements OnInit {
     if (this.profileForm.invalid || this.isSubmittingProfile) return;
     this.isSubmittingProfile = true;
     const slug = this.activeProfileSlug();
-    const { name, role, bio, photoUrl, cvUrl, email } = this.profileForm.value;
+    const { name, role, bio, photoUrl, cvUrl, email, projectsStatLabel, stat2Label, stat2Value, stat3Label, stat3Value } = this.profileForm.value;
     this.profileService.updateBySlug(slug, {
       name: name ?? '',
       role: role ?? '',
       bio: bio ?? '',
       photoUrl: photoUrl ?? '',
       cvUrl: cvUrl ?? '',
-      email: email ?? ''
+      email: email ?? '',
+      projectsStatLabel: projectsStatLabel ?? '',
+      stat2Label: stat2Label ?? '',
+      stat2Value: stat2Value ?? '',
+      stat3Label: stat3Label ?? '',
+      stat3Value: stat3Value ?? ''
     }).subscribe({
       next: () => { alert('Profile updated successfully!'); this.isSubmittingProfile = false; },
       error: () => { this.isSubmittingProfile = false; }

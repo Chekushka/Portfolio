@@ -46,6 +46,36 @@
           placeholder="Short Bio about yourself..."
           rows="3"
         ></textarea>
+        <div class="form-field hero-stats-group">
+          <h3 class="subsection-heading">Hero Stats</h3>
+          <p class="empty-hint">
+            Slot 1's number is derived automatically from this profile's project count —
+            only its label is editable here.
+          </p>
+          <div class="form-row">
+            <input
+              formControlName="projectsStatLabel"
+              placeholder="Stat 1 Label (e.g. GAMES)"
+            />
+          </div>
+          <div class="form-row">
+            <input
+              formControlName="stat2Label"
+              placeholder="Stat 2 Label (e.g. DOWNLOADS)"
+            />
+            <input
+              formControlName="stat2Value"
+              placeholder="Stat 2 Value (e.g. 100K+)"
+            />
+          </div>
+          <div class="form-row">
+            <input
+              formControlName="stat3Label"
+              placeholder="Stat 3 Label (e.g. YRS XP)"
+            />
+            <input formControlName="stat3Value" placeholder="Stat 3 Value (e.g. 4+)" />
+          </div>
+        </div>
         <div class="form-actions">
           <button
             type="submit"
