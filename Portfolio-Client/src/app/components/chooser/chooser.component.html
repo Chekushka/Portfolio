@@ -15,9 +15,22 @@
   >
     <div class="half-bg unity-bg" aria-hidden="true"></div>
     <div class="half-content">
-      <div class="half-eyebrow">GAME DEVELOPER</div>
-      <h2 class="half-name">{{ unityProfile()?.name || 'Serhii Chekun' }}</h2>
-      <p class="half-role">{{ unityProfile()?.role || 'Unity & Mobile' }}</p>
+      <div class="preview-panel preview-unity">
+        <div class="preview-grid" aria-hidden="true"></div>
+        <div class="preview-coin" aria-hidden="true">¢</div>
+
+        <div class="preview-header">
+          <div class="half-eyebrow">// GAME DEVELOPER</div>
+          <h2 class="half-name">{{ unityProfile()?.name || 'Serhii Chekun' }}</h2>
+          <p class="half-role">{{ unityProfile()?.role || 'Unity & Mobile' }}</p>
+        </div>
+
+        <div class="preview-tags" aria-hidden="true">
+          <span class="preview-tag tag-amber">UNITY</span>
+          <span class="preview-tag tag-indigo">C#</span>
+        </div>
+      </div>
+
       <div class="half-cta">View Profile →</div>
     </div>
   </div>
@@ -47,9 +60,35 @@
       <span class="dp-sym s5">&lt;T&gt;</span>
     </div>
     <div class="half-content">
-      <div class="half-eyebrow dotnet-eyebrow">.NET DEVELOPER</div>
-      <h2 class="half-name dotnet-name">{{ dotnetProfile()?.name || 'Serhii Chekun' }}</h2>
-      <p class="half-role dotnet-role">{{ dotnetProfile()?.role || 'ASP.NET Core & C#' }}</p>
+      <div class="preview-panel preview-dotnet">
+        <div class="preview-code-syms" aria-hidden="true">
+          <span>{{ '{' }}</span>
+          <span>&lt;/&gt;</span>
+          <span>[]</span>
+        </div>
+
+        <div class="preview-header">
+          <div class="half-eyebrow dotnet-eyebrow">// .NET DEVELOPER</div>
+          <h2 class="half-name dotnet-name">{{ dotnetProfile()?.name || 'Serhii Chekun' }}</h2>
+          <p class="half-role dotnet-role">{{ dotnetProfile()?.role || 'ASP.NET Core & C#' }}</p>
+        </div>
+
+        <div class="preview-pseudo" aria-hidden="true">
+          <div class="preview-pseudo-line">
+            <span class="pp-kw">app</span>.MapGet(<span class="pp-str">"/api/profile"</span>, ...)
+          </div>
+          <div class="preview-pseudo-line">
+            services.AddDbContext&lt;<span class="pp-type">AppDbContext</span>&gt;()
+          </div>
+        </div>
+
+        <div class="preview-stats" aria-hidden="true">
+          <span>42 ENDPOINTS</span>
+          <span class="pp-dot">·</span>
+          <span>99.9% UPTIME</span>
+        </div>
+      </div>
+
       <div class="half-cta dotnet-cta">View Profile →</div>
     </div>
   </div>
