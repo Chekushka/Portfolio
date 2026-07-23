@@ -42,7 +42,12 @@ public class AppDbContext : DbContext
                 CvUrl = "#",
                 Email = "hello@example.com",
                 Slug = "unity",
-                ThemeKey = "unity"
+                ThemeKey = "unity",
+                ProjectsStatLabel = "GAMES",
+                Stat2Label = "DOWNLOADS",
+                Stat2Value = "100K+",
+                Stat3Label = "YRS XP",
+                Stat3Value = "4+"
             },
             new UserProfile
             {
@@ -54,7 +59,10 @@ public class AppDbContext : DbContext
                 CvUrl = "#",
                 Email = "hello@example.com",
                 Slug = "dotnet",
-                ThemeKey = "dotnet"
+                ThemeKey = "dotnet",
+                ProjectsStatLabel = "PROJECTS",
+                Stat2Label = "YRS XP",
+                Stat2Value = "4+"
             }
         );
     }

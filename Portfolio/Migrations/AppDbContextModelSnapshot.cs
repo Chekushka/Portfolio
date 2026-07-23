@@ -139,12 +139,27 @@ namespace Portfolio.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ProjectsStatLabel")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Slug")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Stat2Label")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Stat2Value")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Stat3Label")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Stat3Value")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ThemeKey")
@@ -167,8 +182,13 @@ namespace Portfolio.Migrations
                             Email = "hello@example.com",
                             Name = "Serhio",
                             PhotoUrl = "https://placehold.co/400x400/10b981/white?text=S",
+                            ProjectsStatLabel = "GAMES",
                             Role = "Software & Unity Developer",
                             Slug = "unity",
+                            Stat2Label = "DOWNLOADS",
+                            Stat2Value = "100K+",
+                            Stat3Label = "YRS XP",
+                            Stat3Value = "4+",
                             ThemeKey = "unity"
                         },
                         new
@@ -179,8 +199,11 @@ namespace Portfolio.Migrations
                             Email = "hello@example.com",
                             Name = "Serhio",
                             PhotoUrl = "https://placehold.co/400x400/6366f1/white?text=S",
+                            ProjectsStatLabel = "PROJECTS",
                             Role = ".NET Developer",
                             Slug = "dotnet",
+                            Stat2Label = "YRS XP",
+                            Stat2Value = "4+",
                             ThemeKey = "dotnet"
                         });
                 });

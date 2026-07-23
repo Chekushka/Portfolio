@@ -11,4 +11,9 @@ public class UserProfile
     public string Email { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;
     public string ThemeKey { get; set; } = "unity";
+    public string? ProjectsStatLabel { get; set; }
+    public string? Stat2Label { get; set; }
+    public string? Stat2Value { get; set; }
+    public string? Stat3Label { get; set; }
+    public string? Stat3Value { get; set; }
 }
