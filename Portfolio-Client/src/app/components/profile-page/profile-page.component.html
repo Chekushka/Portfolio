@@ -37,7 +37,7 @@
   <!-- ==================== HERO ==================== -->
   <section class="hero">
     <div class="hero-content">
-      <div class="eyebrow">// GAME DEVELOPER</div>
+      <div class="eyebrow">{{ isUnity() ? '// GAME DEVELOPER' : '// .NET DEVELOPER' }}</div>
 
       <h1 class="hero-name">{{ profile().name || 'SERHII CHEKUN' }}</h1>
       <div class="hero-role">{{ profile().role || 'Indie Game Creator' }}</div>
@@ -71,10 +71,13 @@
                  class="contact-icon-btn" [title]="method.label"
                  [attr.aria-label]="method.label">
                 @if (method.iconKey) {
-                  <img [src]="'/assets/icons/' + method.iconKey + '.svg'"
-                       [alt]="method.label" width="20" height="20">
+                  <span class="contact-icon-mask" aria-hidden="true"
+                        [style.-webkit-mask-image]="'url(/assets/icons/' + method.iconKey + '.svg)'"
+                        [style.mask-image]="'url(/assets/icons/' + method.iconKey + '.svg)'"></span>
                 } @else if (method.customIconUrl) {
-                  <img [src]="method.customIconUrl" [alt]="method.label" width="20" height="20">
+                  <span class="contact-icon-mask" aria-hidden="true"
+                        [style.-webkit-mask-image]="'url(' + method.customIconUrl + ')'"
+                        [style.mask-image]="'url(' + method.customIconUrl + ')'"></span>
                 } @else {
                   <span aria-hidden="true">{{ method.label.slice(0, 2).toUpperCase() }}</span>
                 }
