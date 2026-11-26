@@ -403,11 +403,7 @@
   justify-content: center;
   align-items: center;
   animation: fadeInUp 0.48s 0.14s cubic-bezier(0, 0, 0.2, 1) both;
-  background: linear-gradient(
-    145deg,
-    var(--c-frame-glow-1) 0%,
-    var(--c-frame-glow-2) 100%
-  );
+  background: linear-gradient(145deg, var(--c-frame-glow-1) 0%, var(--c-frame-glow-2) 100%);
   border-radius: 24px;
   padding: 2.5rem;
 }
@@ -678,9 +674,9 @@
 
     h3 {
       margin: 0 0 0.7rem;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
+      font-family: var(--font-hero);
+      font-size: 1.1rem;
+      font-weight: 600;
       color: var(--c-text);
     }
   }
@@ -694,10 +690,10 @@
   .ctag {
     padding: 3px 10px;
     border-radius: 2px;
-    font-family: var(--font-display);
-    font-size: 0.62rem;
-    letter-spacing: 0.5px;
-    font-weight: 600;
+    font-family: var(--font-hero);
+    font-size: 0.72rem;
+    letter-spacing: 0.3px;
+    font-weight: 500;
 
     &.cyan {
       background: var(--c-primary-lgt);
@@ -827,7 +823,7 @@
 
   h2 {
     margin: 0.3rem 0 1.4rem;
-    font-family: var(--font-display);
+    font-family: var(--font-hero);
     font-size: 1.8rem;
     font-weight: 700;
     letter-spacing: -0.3px;
@@ -845,9 +841,9 @@
 .mtag {
   padding: 4px 12px;
   border-radius: 2px;
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-family: var(--font-hero);
+  font-size: 0.78rem;
+  font-weight: 500;
   background: var(--c-surface);
   border: 2px solid var(--c-border-strong);
   color: oklch(15% 0.04 265);
@@ -1110,22 +1106,82 @@
 }
 
 @keyframes dpFloat {
-  from { transform: translateY(0) rotate(0deg); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 0.7; }
-  to   { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+  from {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(-110vh) rotate(20deg);
+    opacity: 0;
+  }
 }
 
-.dp-symbol:nth-child(1)  { left: 5%;  font-size: 2rem;   animation-duration: 8s;  animation-delay: 0s;    }
-.dp-symbol:nth-child(2)  { left: 12%; font-size: 1.2rem; animation-duration: 11s; animation-delay: -2s;   }
-.dp-symbol:nth-child(3)  { left: 22%; font-size: 1.6rem; animation-duration: 7s;  animation-delay: -4s;   }
-.dp-symbol:nth-child(4)  { left: 33%; font-size: 2.2rem; animation-duration: 9s;  animation-delay: -1s;   }
-.dp-symbol:nth-child(5)  { left: 45%; font-size: 1rem;   animation-duration: 10s; animation-delay: -5s;   }
-.dp-symbol:nth-child(6)  { left: 55%; font-size: 1.8rem; animation-duration: 6.5s;animation-delay: -3s;   }
-.dp-symbol:nth-child(7)  { left: 65%; font-size: 1.4rem; animation-duration: 8.5s;animation-delay: -6s;   }
-.dp-symbol:nth-child(8)  { left: 74%; font-size: 2rem;   animation-duration: 7.5s;animation-delay: -1.5s; }
-.dp-symbol:nth-child(9)  { left: 83%; font-size: 1.2rem; animation-duration: 9.5s;animation-delay: -3.5s; }
-.dp-symbol:nth-child(10) { left: 92%; font-size: 1.6rem; animation-duration: 6s;  animation-delay: -7s;   }
+.dp-symbol:nth-child(1) {
+  left: 5%;
+  font-size: 2rem;
+  animation-duration: 8s;
+  animation-delay: 0s;
+}
+.dp-symbol:nth-child(2) {
+  left: 12%;
+  font-size: 1.2rem;
+  animation-duration: 11s;
+  animation-delay: -2s;
+}
+.dp-symbol:nth-child(3) {
+  left: 22%;
+  font-size: 1.6rem;
+  animation-duration: 7s;
+  animation-delay: -4s;
+}
+.dp-symbol:nth-child(4) {
+  left: 33%;
+  font-size: 2.2rem;
+  animation-duration: 9s;
+  animation-delay: -1s;
+}
+.dp-symbol:nth-child(5) {
+  left: 45%;
+  font-size: 1rem;
+  animation-duration: 10s;
+  animation-delay: -5s;
+}
+.dp-symbol:nth-child(6) {
+  left: 55%;
+  font-size: 1.8rem;
+  animation-duration: 6.5s;
+  animation-delay: -3s;
+}
+.dp-symbol:nth-child(7) {
+  left: 65%;
+  font-size: 1.4rem;
+  animation-duration: 8.5s;
+  animation-delay: -6s;
+}
+.dp-symbol:nth-child(8) {
+  left: 74%;
+  font-size: 2rem;
+  animation-duration: 7.5s;
+  animation-delay: -1.5s;
+}
+.dp-symbol:nth-child(9) {
+  left: 83%;
+  font-size: 1.2rem;
+  animation-duration: 9.5s;
+  animation-delay: -3.5s;
+}
+.dp-symbol:nth-child(10) {
+  left: 92%;
+  font-size: 1.6rem;
+  animation-duration: 6s;
+  animation-delay: -7s;
+}
 
 .dotnet-accent {
   display: none;
@@ -1133,5 +1189,9 @@
   inset: 0;
   pointer-events: none;
   z-index: 0;
-  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(99, 102, 241, 0.08), transparent 70%);
+  background: radial-gradient(
+    ellipse 60% 50% at 70% 50%,
+    rgba(99, 102, 241, 0.08),
+    transparent 70%
+  );
 }
