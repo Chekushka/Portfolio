@@ -25,7 +25,7 @@ public class ProjectController : ControllerBase
         if (profileId.HasValue)
             query = query.Where(p => p.ProfileId == profileId.Value);
 
-        var projects = await query.OrderBy(p => p.Order).ToListAsync();
+        var projects = await query.OrderBy(p => p.Order).ThenBy(p => p.Id).ToListAsync();
 
         var response = projects.Select(p => new ProjectResponse
         {
@@ -156,6 +156,7 @@ public class ProjectController : ControllerBase
             .Include(p => p.Tags)
             .Where(p => p.ProfileId == project.ProfileId)
             .OrderBy(p => p.Order)
+            .ThenBy(p => p.Id)
             .ToListAsync();
 
         if (request.Direction != "up" && request.Direction != "down")
@@ -166,6 +167,10 @@ public class ProjectController : ControllerBase
 
         if (newIndex < 0 || newIndex >= siblings.Count)
             return BadRequest("Project is already at the boundary.");
+
+        // Rows created before the Order column all default to 0; swapping equal values is a no-op.
+        for (var i = 0; i < siblings.Count; i++)
+            siblings[i].Order = i;
 
         (siblings[index].Order, siblings[newIndex].Order) =
             (siblings[newIndex].Order, siblings[index].Order);
