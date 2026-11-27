@@ -1,24 +1,30 @@
-<nav class="main-nav">
-  <div class="nav-container">
+<a class="skip-link" href="#main" (click)="skipToContent($event)">Skip to content</a>
+
+<header class="main-nav">
+  <nav class="nav-container" aria-label="Main">
     <a routerLink="/" class="logo">Serhii Chekun</a>
+
     <div class="links">
-      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      @if (themeService.activeTheme()) {
+        <div class="profile-switch" role="group" aria-label="Portfolio">
+          <a routerLink="/unity" routerLinkActive="active" ariaCurrentWhenActive="page">Unity</a>
+          <a routerLink="/dotnet" routerLinkActive="active" ariaCurrentWhenActive="page">.NET</a>
+        </div>
+      }
 
       @if (authService.isLoggedIn()) {
-      <a routerLink="/admin" routerLinkActive="active">Admin Panel</a>
-      <a (click)="logout()" style="cursor: pointer;">Logout</a>
-      }
-      @else {
-      <a routerLink="/login" routerLinkActive="active">Login</a>
+        <a class="nav-link" routerLink="/admin" routerLinkActive="active" ariaCurrentWhenActive="page">Admin</a>
+        <button type="button" class="nav-link" (click)="logout()">Log out</button>
       }
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
 
-<main class="content-wrapper">
+<main #main id="main" class="content-wrapper" tabindex="-1">
   <router-outlet></router-outlet>
 </main>
 
 <footer class="footer">
-  <p>&copy; 2026 | Developed with Angular & .NET</p>
+  <p>© {{ year }} Serhii Chekun</p>
+  <p class="footer-built">Built with Angular and ASP.NET Core</p>
 </footer>

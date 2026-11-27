@@ -1,15 +1,18 @@
 import {
-  Component, HostListener, Renderer2,
-  inject, OnInit, OnDestroy, signal, computed
+  Component, ElementRef, Renderer2,
+  inject, OnInit, OnDestroy, signal, computed, viewChild
 } from '@angular/core';
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MarkdownModule } from 'ngx-markdown';
+
 import { ProjectService, Project } from '../../services/project.service';
 import { ProfileService, UserProfile } from '../../services/profile.service';
 import { ContactMethodService, ContactMethod } from '../../services/contact-method.service';
 import { ThemeService } from '../../services/theme.service';
 import { SafeUrlPipe } from '../../pipes/safe-url.pipe';
-import { MarkdownModule } from 'ngx-markdown';
+import { getReadableTextColor } from './readable-text-color';
 
 interface FloatingCoin {
   id: number;
@@ -18,10 +21,16 @@ interface FloatingCoin {
   duration: number;
 }
 
+// Hardcoded per theme by design (see TASKS.md "Theme-conditional hero badges").
+const HIGHLIGHTS: Record<string, string[]> = {
+  unity: ['Unity', 'Mobile', '100K+ downloads'],
+  dotnet: ['ASP.NET Core', 'EF Core', 'REST APIs'],
+};
+
 @Component({
   selector: 'app-profile-page',
   standalone: true,
-  imports: [CommonModule, SafeUrlPipe, MarkdownModule],
+  imports: [SafeUrlPipe, MarkdownModule, RouterLink, NgTemplateOutlet],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.scss'
 })
@@ -32,13 +41,17 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   private profileService = inject(ProfileService);
   private contactMethodService = inject(ContactMethodService);
   private themeService = inject(ThemeService);
+  private title = inject(Title);
   private renderer = inject(Renderer2);
   private document = inject(DOCUMENT);
 
+  private projectDialog = viewChild<ElementRef<HTMLDialogElement>>('projectDialog');
   private coinIdCounter = 0;
+  private spawnTimeout: ReturnType<typeof setTimeout> | null = null;
   private spawnInterval: ReturnType<typeof setInterval> | null = null;
   private despawnTimeouts = new Map<number, ReturnType<typeof setTimeout>>();
   private bodyThemeClass: string | null = null;
+  private defaultTitle = this.title.getTitle();
 
   profile = signal<UserProfile>({
     id: 0,
@@ -56,6 +69,7 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     stat3Label: null,
     stat3Value: null,
   });
+  isLoaded = signal(false);
   projects = signal<Project[]>([]);
   contactMethods = signal<ContactMethod[]>([]);
   selectedProject = signal<Project | null>(null);
@@ -63,6 +77,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   floatingCoins = signal<FloatingCoin[]>([]);
 
   isUnity = computed(() => this.profile().themeKey === 'unity');
+  highlights = computed(() => HIGHLIGHTS[this.profile().themeKey] ?? []);
+  // The profile set is fixed at two (seeded), so the "other" profile is always known.
+  otherSlug = computed(() => (this.profile().slug === 'dotnet' ? 'unity' : 'dotnet'));
 
   projectCount = computed(() => this.projects().length);
 
@@ -88,29 +105,71 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     const slug = this.route.snapshot.paramMap.get('slug') ?? '';
     this.profileService.getBySlug(slug).subscribe({
       next: (data) => {
+        const themeKey = data.themeKey || 'unity';
         this.profile.set(data);
-        this.applyBodyTheme(data.themeKey || 'unity');
-        this.themeService.activeTheme.set(data.themeKey || 'unity');
+        this.isLoaded.set(true);
+        this.applyBodyTheme(themeKey);
+        this.themeService.activeTheme.set(themeKey);
+        this.title.setTitle([data.name, data.role].filter(Boolean).join(' · ') || this.defaultTitle);
         this.projectService.getByProfileId(data.id).subscribe(p => this.projects.set(p));
+        if (themeKey === 'unity') this.startCoinGame();
       },
       error: () => this.router.navigate([''])
     });
 
     this.contactMethodService.getMethods().subscribe(data => this.contactMethods.set(data));
-
-    setTimeout(() => this.spawnCoin(), 5000);
-    this.spawnInterval = setInterval(() => {
-      if (this.floatingCoins().length < 2) this.spawnCoin();
-    }, 10000);
   }
 
   ngOnDestroy(): void {
+    if (this.spawnTimeout) clearTimeout(this.spawnTimeout);
     if (this.spawnInterval) clearInterval(this.spawnInterval);
     this.despawnTimeouts.forEach(t => clearTimeout(t));
     if (this.bodyThemeClass) {
       this.renderer.removeClass(this.document.body, this.bodyThemeClass);
     }
     this.themeService.activeTheme.set(null);
+    this.title.setTitle(this.defaultTitle);
+  }
+
+  tagTextColor(color: string): string | null {
+    return getReadableTextColor(color);
+  }
+
+  scrollToContact(event: Event): void {
+    event.preventDefault();
+    const contact = this.document.getElementById('contact');
+    contact?.scrollIntoView();
+    contact?.focus({ preventScroll: true });
+  }
+
+  catchCoin(coin: FloatingCoin): void {
+    this.gameScore.update(s => s + coin.value);
+    this.despawnCoin(coin.id);
+    setTimeout(() => this.spawnCoin(), 300);
+  }
+
+  formattedScore(): string {
+    return this.gameScore().toString().padStart(8, '0');
+  }
+
+  openProject(project: Project): void {
+    this.selectedProject.set(project);
+    this.projectDialog()?.nativeElement.showModal();
+  }
+
+  closeProject(): void {
+    this.projectDialog()?.nativeElement.close();
+  }
+
+  // Fires for the close button, Escape and backdrop clicks alike.
+  handleDialogClose(): void {
+    this.selectedProject.set(null);
+  }
+
+  // The dialog has no padding, so a click whose target is the dialog itself landed on
+  // the ::backdrop.
+  handleDialogClick(event: MouseEvent): void {
+    if (event.target === event.currentTarget) this.closeProject();
   }
 
   private applyBodyTheme(themeKey: string): void {
@@ -119,6 +178,13 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     }
     this.bodyThemeClass = `theme-${themeKey}`;
     this.renderer.addClass(this.document.body, this.bodyThemeClass);
+  }
+
+  private startCoinGame(): void {
+    this.spawnTimeout = setTimeout(() => this.spawnCoin(), 5000);
+    this.spawnInterval = setInterval(() => {
+      if (this.floatingCoins().length < 2) this.spawnCoin();
+    }, 10000);
   }
 
   private spawnCoin(): void {
@@ -135,34 +201,9 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.despawnTimeouts.set(id, timeout);
   }
 
-  catchCoin(coin: FloatingCoin): void {
-    this.gameScore.update(s => s + coin.value);
-    this.despawnCoin(coin.id);
-    setTimeout(() => this.spawnCoin(), 300);
-  }
-
   private despawnCoin(id: number): void {
     this.floatingCoins.update(coins => coins.filter(c => c.id !== id));
     const t = this.despawnTimeouts.get(id);
     if (t) { clearTimeout(t); this.despawnTimeouts.delete(id); }
-  }
-
-  formattedScore(): string {
-    return this.gameScore().toString().padStart(8, '0');
-  }
-
-  openProject(project: Project): void {
-    this.selectedProject.set(project);
-    document.documentElement.style.overflow = 'hidden';
-  }
-
-  closeProject(): void {
-    this.selectedProject.set(null);
-    document.documentElement.style.overflow = '';
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-    if (this.selectedProject()) this.closeProject();
   }
 }

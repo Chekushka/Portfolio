@@ -157,14 +157,12 @@ authGuard                ✅   ← AuthService (isLoggedIn)
 ```
 
 **`ThemeService`** is the one exception to "one service per controller": it exists because
-the app shell (nav/footer in `AppComponent`) lives outside `ProfilePageComponent` and so
-never sees its `theme-<key>` host class or its `document.body` class toggle.
+the app shell (nav/footer in `AppComponent`) needs to know when a profile page is active.
 `ProfilePageComponent` sets `themeService.activeTheme` to the resolved `themeKey` once the
-profile loads and resets it to `null` in `ngOnDestroy` (same lifecycle as the existing
-body-class toggle — see Gotchas). `AppComponent` reads it via
-`@HostBinding('class')` → `theme-<key>` or `''`, so `.main-nav`/`.footer` in
-`app.component.scss` can be styled under `:host(.theme-dotnet)`. Chooser/admin/login never
-set `activeTheme`, so the shell stays neutral on those routes.
+profile loads and resets it to `null` in `ngOnDestroy` (same lifecycle as the body-class
+toggle — see Gotchas). `AppComponent` uses it only to show the Unity/.NET profile switch in
+the nav. Shell *colours* need no wiring: `.main-nav`/`.footer` read the `--c-*` theme vars
+(set on `body.theme-*`) with `--g-*` fallbacks, so they follow the theme automatically.
 
 ## Coding Conventions
 
@@ -205,9 +203,13 @@ deliberate choice, not an oversight.
   delete-profile endpoint), relevant if one is ever added.
 - **Theming lives on `document.body`, not the component host.** `styles.scss` defines a
   neutral `$neutral-bg` base (`html`/`body`, no theme class) shared by the chooser, admin,
-  and login, plus `body.theme-unity` (warm grid, `body::before`) and `body.theme-dotnet`
-  (dark, card/modal/button overrides — moved here from the old `:host.theme-dotnet` rules
-  in `profile-page.component.scss`). `ProfilePageComponent` adds/removes `theme-<key>` on
+  and login, plus `.theme-unity` (warm paper, graph grid, hard offset shadows) and
+  `.theme-dotnet` (graphite, dot grid, IBM Plex). Each theme block is **only CSS custom
+  properties** (`--c-*` colours, `--font-*`, `--radius`, `--shadow-offset`, `--tilt`) plus the
+  page background; components never branch on theme, they just read the vars. The chooser
+  puts the same classes on each half so its previews match the real pages. Global scales
+  (spacing, type, motion, z-index) are on `:root`; breakpoints are SCSS vars in
+  `src/styles/_breakpoints.scss`. `ProfilePageComponent` adds/removes `theme-<key>` on
   `document.body` via `Renderer2` once the profile resolves (`themeKey` isn't known at
   `ngOnInit`) and strips it in `ngOnDestroy`, so leaving a profile page never leaves a
   theme class stuck on `body`. Don't reintroduce a `:host.theme-*`/`@HostBinding` pattern —

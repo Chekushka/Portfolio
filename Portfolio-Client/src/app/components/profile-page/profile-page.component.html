@@ -1,231 +1,261 @@
+<ng-template #coinArt>
+  <svg class="coin-art" viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true">
+    <path fill="#f5c518" d="M4 0h4v1h2v1h1v1h1v6h-1v1h-1v1h-2v1H4v-1H2v-1H1V9H0V3h1V2h1V1h2z" />
+    <path fill="#fef08a" d="M2 1h2v1H2zM1 2h2v1H1zM0 3h2v1H0zM0 4h1v1H0z" />
+    <path fill="#c98c06" d="M11 7h1v2h-1zM10 9h1v1h-1zM8 10h2v1H8z" />
+  </svg>
+</ng-template>
+
 <div class="portfolio-wrapper">
-  <div class="dotnet-particles" aria-hidden="true">
-    @for (sym of ['{','}','</>','[]','()','<T>','=>','??','{}','[]']; track sym + $index) {
-      <span class="dp-symbol">{{ sym }}</span>
+  @if (isUnity() && isLoaded()) {
+    @for (coin of floatingCoins(); track coin.id) {
+      <button
+        type="button"
+        class="bubble-coin"
+        [style.left.%]="coin.left"
+        [style.animation-duration.s]="coin.duration"
+        [attr.aria-label]="'Catch coin, plus ' + coin.value"
+        (click)="catchCoin(coin)"
+      >
+        <span class="coin-face">
+          <ng-container [ngTemplateOutlet]="coinArt" />
+          <span class="coin-label" aria-hidden="true">+{{ coin.value }}</span>
+        </span>
+      </button>
     }
-  </div>
-  <div class="dotnet-accent" aria-hidden="true"></div>
 
-  <!-- Background layers -->
-  <div class="bg-orbs" aria-hidden="true"></div>
-
-  <!-- Floating Coin Bubbles (Coin Bubbles game reimagined) -->
-  @for (coin of floatingCoins(); track coin.id) {
-    <div
-      class="bubble-coin"
-      [style.left.%]="coin.left"
-      [style.animation-duration.s]="coin.duration"
-      role="button"
-      tabindex="0"
-      [attr.aria-label]="'+' + coin.value + ' — click to catch'"
-      (click)="catchCoin(coin)"
-      (keydown.enter)="catchCoin(coin)"
-      (keydown.space)="catchCoin(coin); $event.preventDefault()"
-    >
-      <div class="coin-face">
-        <span class="coin-label">+{{ coin.value }}</span>
-      </div>
+    <div class="hud" aria-live="polite">
+      <span class="hud-label">Score</span>
+      <span class="hud-value">{{ formattedScore() }}</span>
     </div>
   }
 
-  <!-- Arcade HUD Score -->
-  <div class="hud">
-    <div class="hud-label">SCORE</div>
-    <div class="hud-value">{{ formattedScore() }}</div>
-  </div>
-
-  <!-- ==================== HERO ==================== -->
-  <section class="hero">
-    <div class="hero-content">
-      <div class="eyebrow">{{ isUnity() ? '// GAME DEVELOPER' : '// .NET DEVELOPER' }}</div>
-
-      <h1 class="hero-name">{{ profile().name || 'SERHII CHEKUN' }}</h1>
-      <div class="hero-role">{{ profile().role || 'Indie Game Creator' }}</div>
-
-      <p class="hero-bio">{{ profile().bio }}</p>
-
-      <div class="hero-stats">
-        @for (stat of heroStats(); track $index; let last = $last) {
-        <div class="stat">
-          <div class="stat-num">{{ stat.value }}</div>
-          <div class="stat-lbl">{{ stat.label }}</div>
-        </div>
-        @if (!last) {
-        <div class="stat-divider"></div>
-        } }
+  @if (!isLoaded()) {
+    <div class="hero hero-skeleton" aria-busy="true">
+      <span class="sr-only">Loading profile…</span>
+      <div class="hero-content">
+        <div class="sk sk-title"></div>
+        <div class="sk sk-line short"></div>
+        <div class="sk sk-line"></div>
+        <div class="sk sk-line"></div>
       </div>
-
-      <div class="hero-actions">
-        @if (profile().cvUrl) {
-          <a [href]="profile().cvUrl" target="_blank" class="btn-primary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-            </svg>
-            Download CV
-          </a>
+      <div class="sk sk-photo"></div>
+    </div>
+  } @else {
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" aria-labelledby="hero-name">
+      <div class="hero-content">
+        <h1 id="hero-name" class="hero-name">{{ profile().name }}</h1>
+        @if (profile().role) {
+          <p class="hero-role">{{ profile().role }}</p>
         }
-        @if (contactMethods().length > 0) {
-          <div class="contact-icons">
-            @for (method of contactMethods(); track method.id) {
-              <a [href]="method.url" target="_blank" rel="noopener noreferrer"
-                 class="contact-icon-btn" [title]="method.label"
-                 [attr.aria-label]="method.label">
-                @if (method.iconKey) {
-                  <span class="contact-icon-mask" aria-hidden="true"
-                        [style.-webkit-mask-image]="'url(/assets/icons/' + method.iconKey + '.svg)'"
-                        [style.mask-image]="'url(/assets/icons/' + method.iconKey + '.svg)'"></span>
-                } @else if (method.customIconUrl) {
-                  <span class="contact-icon-mask" aria-hidden="true"
-                        [style.-webkit-mask-image]="'url(' + method.customIconUrl + ')'"
-                        [style.mask-image]="'url(' + method.customIconUrl + ')'"></span>
-                } @else {
-                  <span aria-hidden="true">{{ method.label.slice(0, 2).toUpperCase() }}</span>
-                }
-              </a>
+        @if (profile().bio) {
+          <p class="hero-bio">{{ profile().bio }}</p>
+        }
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#contact" (click)="scrollToContact($event)">Get in touch</a>
+          @if (profile().cvUrl) {
+            <a [href]="profile().cvUrl" target="_blank" rel="noopener" class="btn btn-secondary">
+              Download CV
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14" />
+              </svg>
+            </a>
+          }
+        </div>
+
+        @if (heroStats().length > 0) {
+          <dl class="hero-stats">
+            @for (stat of heroStats(); track $index) {
+              <div class="stat">
+                <dt>{{ stat.label }}</dt>
+                <dd>{{ stat.value }}</dd>
+              </div>
             }
-          </div>
+          </dl>
         }
       </div>
-    </div>
 
-    <div class="hero-visual">
-      <div class="profile-wrap">
-        <div class="profile-glow"></div>
-        @if (profile().photoUrl) {
-          <img [src]="profile().photoUrl" [alt]="profile().name" class="profile-img" />
-        } @else {
-          <div class="profile-placeholder">
-            <span>{{ (profile().name || 'SC').slice(0, 2).toUpperCase() }}</span>
-          </div>
-        }
-        <div class="corner c-tl"></div>
-        <div class="corner c-tr"></div>
-        <div class="corner c-bl"></div>
-        <div class="corner c-br"></div>
-      </div>
-
-      @if (isUnity()) {
-        <div class="badge b1">🎮 UNITY</div>
-        <div class="badge b2">📱 MOBILE</div>
-        <div class="badge b3">⬇️ 100K+</div>
-      } @else {
-        <div class="badge b1">⚙️ ASP.NET CORE</div>
-        <div class="badge b2">🗄️ EF CORE</div>
-        <div class="badge b3">🔌 REST API</div>
-      }
-    </div>
-  </section>
-
-  <!-- ==================== PROJECTS ==================== -->
-  <section class="projects">
-    <div class="section-head">
-      <div class="eyebrow pink">// SELECTED WORKS</div>
-      <h2>{{ isUnity() ? 'GAMES' : 'PROJECTS' }}</h2>
-      <div class="head-line"></div>
-    </div>
-
-    <div class="grid">
-      @for (p of projects(); track p.id) {
-        <div
-          class="card"
-          role="button"
-          tabindex="0"
-          (click)="openProject(p)"
-          (keydown.enter)="openProject(p)"
-          (keydown.space)="openProject(p); $event.preventDefault()"
-        >
-          <div class="card-accent-bar"></div>
-          <div class="card-img-wrap">
-            <img
-              [src]="
-                p.previewImageUrl || 'https://placehold.co/600x400/e8e4f8/5b3fc8?text=NO+IMAGE'
-              "
-              [alt]="p.name"
-              loading="lazy"
-            />
-            <div class="card-overlay" aria-hidden="true">▶ PLAY GAME</div>
-          </div>
-          <div class="card-body">
-            <h3>{{ p.name }}</h3>
-            <div class="card-tags">
-              @for (tag of p.tags; track tag.id) {
-                <span class="ctag" [style.background-color]="tag.color">
-                  @if (tag.iconKey) {
-                    <img class="tag-icon" [src]="'/assets/icons/' + tag.iconKey + '.svg'" alt="" width="12" height="12">
-                  } @else if (tag.customIconUrl) {
-                    <img class="tag-icon" [src]="tag.customIconUrl" alt="" width="12" height="12">
-                  }
-                  {{ tag.name }}
-                </span>
-              }
+      <div class="hero-visual">
+        <div class="photo-frame">
+          @if (profile().photoUrl) {
+            <img [src]="profile().photoUrl" [alt]="'Portrait of ' + profile().name"
+                 class="profile-img" width="360" height="360" fetchpriority="high" />
+          } @else {
+            <div class="profile-placeholder" aria-hidden="true">
+              {{ (profile().name || 'SC').slice(0, 2).toUpperCase() }}
             </div>
-          </div>
+          }
+        </div>
+
+        <ul class="badges" aria-label="Highlights">
+          @for (item of highlights(); track item) {
+            <li class="badge">{{ item }}</li>
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- ==================== PROJECTS ==================== -->
+    <section class="projects" id="work" aria-labelledby="work-title">
+      <header class="section-head">
+        <h2 id="work-title">
+          {{ isUnity() ? 'Games' : 'Projects' }}
+          @if (projectCount() > 0) {
+            <span class="count">{{ projectCount() }}</span>
+          }
+        </h2>
+        @if (projectCount() > 0) {
+          <p class="section-sub">Open any card for the full write-up, video and links.</p>
+        }
+      </header>
+
+      @if (projectCount() > 0) {
+        <ul class="grid">
+          @for (p of projects(); track p.id; let i = $index) {
+            <li>
+              <article class="card">
+                <div class="card-img-wrap">
+                  @if (p.previewImageUrl) {
+                    <img [src]="p.previewImageUrl" alt="" width="640" height="400"
+                         [attr.loading]="i < 3 ? 'eager' : 'lazy'" />
+                  } @else {
+                    <div class="card-img-empty" aria-hidden="true">{{ p.name.slice(0, 1) }}</div>
+                  }
+                </div>
+                <div class="card-body">
+                  <h3>
+                    <button type="button" class="card-link" (click)="openProject(p)">{{ p.name }}</button>
+                  </h3>
+                  @if (p.tags.length > 0) {
+                    <ul class="tags" aria-label="Tags">
+                      @for (tag of p.tags; track tag.id) {
+                        <li class="tag" [style.background-color]="tag.color" [style.color]="tagTextColor(tag.color)">
+                          @if (tag.iconKey || tag.customIconUrl) {
+                            <span class="tag-icon" aria-hidden="true"
+                                  [style.mask-image]="'url(' + (tag.iconKey ? '/assets/icons/' + tag.iconKey + '.svg' : tag.customIconUrl) + ')'"
+                                  [style.-webkit-mask-image]="'url(' + (tag.iconKey ? '/assets/icons/' + tag.iconKey + '.svg' : tag.customIconUrl) + ')'"></span>
+                          }
+                          {{ tag.name }}
+                        </li>
+                      }
+                    </ul>
+                  }
+                  <div class="card-foot">
+                    @if (p.downloads) {
+                      <span class="card-downloads">{{ p.downloads }} downloads</span>
+                    }
+                    <span class="card-more" aria-hidden="true">Details <span class="arrow">→</span></span>
+                  </div>
+                </div>
+              </article>
+            </li>
+          }
+        </ul>
+      } @else {
+        <div class="empty-state">
+          <p class="empty-title">Write-ups are on the way.</p>
+          <p>In the meantime, I'm happy to walk you through recent work —
+            <a href="#contact" (click)="scrollToContact($event)">get in touch</a>.</p>
         </div>
       }
-    </div>
-  </section>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+    <section class="contact" id="contact" aria-labelledby="contact-title" tabindex="-1">
+      <div class="contact-card">
+        <h2 id="contact-title">Get in touch</h2>
+        <p class="contact-lead">Open to full-time roles, freelance work and collaborations.</p>
+
+        @if (profile().email) {
+          <a class="contact-email" [href]="'mailto:' + profile().email">{{ profile().email }}</a>
+        }
+
+        @if (contactMethods().length > 0) {
+          <ul class="contact-list">
+            @for (method of contactMethods(); track method.id) {
+              <li>
+                <a [href]="method.url" target="_blank" rel="noopener noreferrer" class="contact-chip">
+                  @if (method.iconKey || method.customIconUrl) {
+                    <span class="contact-icon" aria-hidden="true"
+                          [style.mask-image]="'url(' + (method.iconKey ? '/assets/icons/' + method.iconKey + '.svg' : method.customIconUrl) + ')'"
+                          [style.-webkit-mask-image]="'url(' + (method.iconKey ? '/assets/icons/' + method.iconKey + '.svg' : method.customIconUrl) + ')'"></span>
+                  }
+                  {{ method.label }}
+                </a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <p class="cross-link">
+        {{ isUnity() ? 'I also build backends.' : 'I also make games.' }}
+        <a [routerLink]="['/', otherSlug()]">
+          {{ isUnity() ? 'See the .NET work' : 'See the Unity games' }} <span aria-hidden="true">→</span>
+        </a>
+      </p>
+    </section>
+  }
 
   <!-- ==================== MODAL ==================== -->
-  @if (selectedProject(); as proj) {
-    <div class="modal-backdrop" (click)="closeProject()">
-      <div
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-        (click)="$event.stopPropagation()"
-      >
-        <button class="modal-close" (click)="closeProject()" aria-label="Close">✕</button>
+  <dialog #projectDialog class="modal" aria-labelledby="modal-title"
+          (close)="handleDialogClose()" (click)="handleDialogClick($event)">
+    <button type="button" class="modal-close" (click)="closeProject()" aria-label="Close project details">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18" />
+      </svg>
+    </button>
 
+    @if (selectedProject(); as proj) {
+      <div class="modal-content" [class.layout-side]="proj.videoUrl && proj.videoLayout === 'side'">
         @if (proj.videoUrl) {
-          <div [class]="proj.videoLayout === 'side' ? 'modal-layout-side' : 'modal-layout-above'">
-            <div class="modal-media">
-              <iframe
-                [src]="proj.videoUrl | safeUrl"
-                frameborder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                style="width: 100%"
-                [title]="proj.name + ' gameplay video'"
-              ></iframe>
-            </div>
-            <div class="modal-desc">
-              <markdown [data]="proj.description" />
-            </div>
+          <div class="modal-media">
+            <iframe
+              [src]="proj.videoUrl | safeUrl"
+              allow="autoplay; fullscreen; picture-in-picture"
+              [title]="proj.name + ' video'"
+            ></iframe>
           </div>
-        } @else {
-          @if (proj.previewImageUrl) {
-            <img [src]="proj.previewImageUrl" [alt]="proj.name" class="modal-img" />
+        } @else if (proj.previewImageUrl) {
+          <img [src]="proj.previewImageUrl" alt="" class="modal-img" width="900" height="506" />
+        }
+
+        <div class="modal-body">
+          <h2 id="modal-title">{{ proj.name }}</h2>
+
+          @if (proj.tags.length > 0 || proj.downloads) {
+            <ul class="tags modal-tags" aria-label="Tags">
+              @for (tag of proj.tags; track tag.id) {
+                <li class="tag" [style.background-color]="tag.color" [style.color]="tagTextColor(tag.color)">
+                  @if (tag.iconKey || tag.customIconUrl) {
+                    <span class="tag-icon" aria-hidden="true"
+                          [style.mask-image]="'url(' + (tag.iconKey ? '/assets/icons/' + tag.iconKey + '.svg' : tag.customIconUrl) + ')'"
+                          [style.-webkit-mask-image]="'url(' + (tag.iconKey ? '/assets/icons/' + tag.iconKey + '.svg' : tag.customIconUrl) + ')'"></span>
+                  }
+                  {{ tag.name }}
+                </li>
+              }
+              @if (proj.downloads) {
+                <li class="tag tag-downloads">{{ proj.downloads }} downloads</li>
+              }
+            </ul>
           }
+
+          @if (proj.marketLink) {
+            <a [href]="proj.marketLink" target="_blank" rel="noopener" class="btn btn-primary modal-cta">
+              {{ isUnity() ? 'View on store' : 'View project' }} <span aria-hidden="true">→</span>
+            </a>
+          }
+
           <div class="modal-desc">
             <markdown [data]="proj.description" />
           </div>
-        }
-
-        <div class="modal-details">
-          <div class="eyebrow">// PROJECT DETAILS</div>
-          <h2 id="modal-title">{{ proj.name }}</h2>
-
-          <div class="modal-tags">
-            @for (tag of proj.tags; track tag.id) {
-              <span class="mtag" [style.background-color]="tag.color">
-                @if (tag.iconKey) {
-                  <img class="tag-icon" [src]="'/assets/icons/' + tag.iconKey + '.svg'" alt="" width="12" height="12">
-                } @else if (tag.customIconUrl) {
-                  <img class="tag-icon" [src]="tag.customIconUrl" alt="" width="12" height="12">
-                }
-                {{ tag.name }}
-              </span>
-            }
-            @if (proj.downloads) {
-              <span class="mtag green">⬇️ {{ proj.downloads }}</span>
-            }
-          </div>
-
-          @if (proj.marketLink) {
-            <a [href]="proj.marketLink" target="_blank" class="btn-primary"> View on Store → </a>
-          }
         </div>
       </div>
-    </div>
-  }
+    }
+  </dialog>
 </div>

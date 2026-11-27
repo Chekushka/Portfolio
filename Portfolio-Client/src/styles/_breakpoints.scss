@@ -1,0 +1,5 @@
+// Media queries can't read CSS custom properties, so breakpoints live here as SCSS.
+// Every other token is a CSS custom property in styles.scss.
+$bp-sm: 560px;
+$bp-md: 768px;
+$bp-lg: 920px;
