@@ -1,12 +1,48 @@
 // Neutral base — chooser/admin/login share this. Tweak this one line to retheme.
-$neutral-bg: oklch(93% 0.006 265);
+$neutral-bg: oklch(95% 0.008 75);
 
 :root {
-  --g-bg:         oklch(97.5% 0.008 75); // legacy warm value, used by app-root nav/footer chrome
+  --nav-h: 64px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 5rem;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+  --text-3xl: clamp(2.5rem, 1.6rem + 3.4vw, 4.25rem);
+
+  --radius-sm: 4px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 1px 2px oklch(22% 0.02 265 / 0.06), 0 4px 12px oklch(22% 0.02 265 / 0.06);
+  --shadow-lift: 0 12px 32px oklch(22% 0.02 265 / 0.16);
+
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 400ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --z-raised: 1;
+  --z-coin: 150;
+  --z-hud: 200;
+  --z-nav: 1000;
+
+  --g-bg:         oklch(97.5% 0.008 75);
   --g-card:       oklch(99.0% 0.005 75);
   --g-border:     oklch(86.0% 0.022 75);
   --g-text:       oklch(22.0% 0.018 265);
-  --g-muted:      oklch(52.0% 0.025 265);
+  --g-muted:      oklch(48.0% 0.025 265);
   --g-primary:    oklch(48.0% 0.24 278);
   --g-cherry:     oklch(54.0% 0.22 22);
   --g-font-hero:    'Fredoka', sans-serif;
@@ -16,6 +52,18 @@ $neutral-bg: oklch(93% 0.006 265);
 
 html {
   background-color: $neutral-bg;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+// Native <dialog> handles focus and Escape; this is the only scroll lock the modal needs.
+html:has(dialog[open]) {
+  overflow: hidden;
 }
 
 body {
@@ -24,116 +72,106 @@ body {
   background: transparent;
   color: var(--g-text);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-// ── Unity theme (warm/amber grid, full page) ────────────────────────────────
-body.theme-unity {
-  background: oklch(97.5% 0.008 75);
+::selection {
+  background: oklch(88% 0.12 75);
+  color: oklch(22% 0.018 265);
+}
 
-  &::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: -1;
-    background-image:
-      linear-gradient(oklch(70% 0.22 75 / 0.22) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(70% 0.22 75 / 0.22) 1px, transparent 1px),
-      linear-gradient(oklch(70% 0.22 75 / 0.10) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(70% 0.22 75 / 0.10) 1px, transparent 1px);
-    background-size: 160px 160px, 160px 160px, 40px 40px, 40px 40px;
-    animation: globalGridScroll 30s linear infinite;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ── Theme tokens ────────────────────────────────────────────────────────────
+// Applied to document.body by ProfilePageComponent, and to each chooser half so the
+// preview matches the page it leads to. Every profile-scoped surface reads these vars;
+// a theme is just a different set of values, never per-selector overrides.
+
+// Unity: warm paper, graph-paper grid, game-UI hard shadows.
+.theme-unity {
+  --c-bg: oklch(97.5% 0.008 75);
+  --c-surface: oklch(95% 0.014 75);
+  --c-card: oklch(99.2% 0.004 75);
+  --c-border: oklch(85% 0.024 75);
+  --c-border-strong: oklch(28% 0.02 265);
+  --c-text: oklch(24% 0.02 265);
+  --c-muted: oklch(46% 0.025 265);
+
+  --c-primary: oklch(48% 0.24 278);
+  --c-primary-dark: oklch(40% 0.24 278);
+  --c-primary-pale: oklch(95% 0.04 278);
+  --c-on-primary: oklch(99% 0.005 75);
+
+  --c-amber: oklch(78% 0.17 75);
+  --c-amber-dark: oklch(52% 0.16 60);
+  --c-amber-lgt: oklch(94% 0.07 85);
+  --c-cherry: oklch(54% 0.22 22);
+
+  --c-shadow: oklch(28% 0.02 265);
+  --shadow-offset: 4px;
+  --tilt: -2deg;
+  --radius: 6px;
+
+  --font-hero: 'Fredoka', sans-serif;
+  --font-display: 'Pixelify Sans', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+
+  background-color: var(--c-bg);
+  background-image:
+    linear-gradient(oklch(70% 0.18 75 / 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.18 75 / 0.16) 1px, transparent 1px),
+    linear-gradient(oklch(70% 0.18 75 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, oklch(70% 0.18 75 / 0.07) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
+}
+
+// .NET: graphite workbench, dot grid, flat surfaces. Violet nods to the .NET brand;
+// the amber detail colour is shared with Unity so both read as the same person.
+.theme-dotnet {
+  --c-bg: oklch(17.5% 0.008 260);
+  --c-surface: oklch(21% 0.01 260);
+  --c-card: oklch(20.5% 0.01 260);
+  --c-border: oklch(30% 0.012 260);
+  --c-border-strong: oklch(42% 0.014 260);
+  --c-text: oklch(95% 0.005 260);
+  --c-muted: oklch(74% 0.012 260);
+
+  --c-primary: oklch(74% 0.14 292);
+  --c-primary-dark: oklch(82% 0.11 292);
+  --c-primary-pale: oklch(26% 0.04 292);
+  --c-on-primary: oklch(17.5% 0.02 292);
+
+  --c-amber: oklch(82% 0.13 80);
+  --c-amber-dark: oklch(82% 0.13 80);
+  --c-amber-lgt: oklch(25% 0.03 80);
+  --c-cherry: oklch(82% 0.13 80);
+
+  --c-shadow: transparent;
+  --shadow-offset: 0px;
+  --tilt: 0deg;
+  --radius: 4px;
+
+  --font-hero: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-display: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+
+  color-scheme: dark;
+  background-color: var(--c-bg);
+  background-image: radial-gradient(oklch(100% 0 0 / 0.07) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+
+  ::selection {
+    background: oklch(45% 0.12 292);
+    color: oklch(98% 0 0);
   }
-}
-
-@keyframes globalGridScroll {
-  from { background-position: 0 0, 0 0, 0 0, 0 0; }
-  to   { background-position: 160px 160px, 160px 160px, 40px 40px, 40px 40px; }
-}
-
-// ── Dotnet theme (dark, full page) ──────────────────────────────────────────
-body.theme-dotnet {
-  background: #080808;
-
-  // Unity grid never renders under the dotnet theme.
-  &::before {
-    content: none;
-  }
-}
-
-body.theme-dotnet .portfolio-wrapper {
-  --c-bg: #080808;
-  --c-surface: #0f0f0f;
-  --c-card: #111;
-  --c-border: #1e1e1e;
-  --c-border-strong: #2a2a2a;
-  --c-text: #ffffff;
-  --c-muted: #666;
-
-  --c-primary: #6366f1;
-  --c-primary-dark: #4f52d4;
-  --c-primary-lgt: #1a1a2e;
-  --c-primary-pale: #0d0d1a;
-
-  --c-amber: #6366f1;
-  --c-amber-dark: #4f52d4;
-  --c-amber-lgt: #1a1a2e;
-
-  --c-cherry: #6366f1;
-  --c-cherry-lgt: #1a1a2e;
-
-  --c-frame-glow-1: rgba(99, 102, 241, 0.18);
-  --c-frame-glow-2: rgba(15, 15, 15, 0.55);
-
-  --font-hero: system-ui, sans-serif;
-  --font-display: system-ui, sans-serif;
-  --font-body: system-ui, sans-serif;
-
-  background: #080808;
-}
-
-// Hide Unity-specific game elements on the dotnet profile
-body.theme-dotnet .bubble-coin,
-body.theme-dotnet .hud,
-body.theme-dotnet .bg-orbs {
-  display: none;
-}
-
-// Show dotnet-specific animated background
-body.theme-dotnet .dotnet-particles {
-  display: block;
-}
-
-body.theme-dotnet .dotnet-accent {
-  display: block;
-}
-
-body.theme-dotnet .eyebrow {
-  color: #6366f1;
-}
-
-body.theme-dotnet .card-accent-bar {
-  background: linear-gradient(90deg, #6366f1, #818cf8);
-}
-
-body.theme-dotnet .card {
-  background: #111;
-  border-color: #1e1e1e;
-}
-
-body.theme-dotnet .card:hover {
-  border-color: #6366f1;
-}
-
-body.theme-dotnet .modal {
-  background: #111;
-  border: 1px solid #1e1e1e;
-}
-
-body.theme-dotnet .btn-primary {
-  background: #6366f1;
-}
-
-body.theme-dotnet .btn-primary:hover {
-  background: #4f52d4;
 }

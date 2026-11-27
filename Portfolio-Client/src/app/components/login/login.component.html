@@ -1,15 +1,18 @@
 <div class="login-container">
   <div class="login-box">
-    <h2>Admin Login</h2>
-    <p>Please enter your credentials to access the dashboard.</p>
+    <h1>Admin login</h1>
+    <p>Sign in to manage profiles and projects.</p>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate>
       <div class="form-group">
-        <input type="text" formControlName="username" placeholder="Username">
+        <label for="login-username">Username</label>
+        <input id="login-username" type="text" formControlName="username" autocomplete="username">
       </div>
 
       <div class="form-group">
-        <input [type]="showPassword ? 'text' : 'password'" formControlName="password" placeholder="Password">
+        <label for="login-password">Password</label>
+        <input id="login-password" [type]="showPassword ? 'text' : 'password'" formControlName="password"
+               autocomplete="current-password">
       </div>
 
       <div class="show-password">
@@ -19,7 +22,13 @@
         </label>
       </div>
 
-      <button type="submit" [disabled]="loginForm.invalid || isLoading">Login</button>
+      @if (errorMessage) {
+        <p class="form-error" role="alert">{{ errorMessage }}</p>
+      }
+
+      <button type="submit" [disabled]="loginForm.invalid || isLoading">
+        {{ isLoading ? 'Signing in…' : 'Sign in' }}
+      </button>
     </form>
   </div>
 </div>

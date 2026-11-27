@@ -18,6 +18,7 @@ export class LoginComponent {
   // Add a loading state to prevent double submission
   isLoading = false;
   showPassword = false;
+  errorMessage = '';
 
   loginForm = new FormGroup({
     username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
@@ -27,6 +28,7 @@ export class LoginComponent {
   onLogin() {
     if (this.loginForm.valid && !this.isLoading) {
       this.isLoading = true;
+      this.errorMessage = '';
 
       const credentials = this.loginForm.getRawValue();
 
@@ -41,8 +43,7 @@ export class LoginComponent {
           // Clear password on failure for security
           this.loginForm.controls.password.reset();
 
-          const errorMessage = err.error?.message || 'Invalid username or password';
-          alert('Login failed: ' + errorMessage);
+          this.errorMessage = err.error?.message || 'Invalid username or password.';
         }
       });
     }

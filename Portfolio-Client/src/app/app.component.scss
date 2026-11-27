@@ -1,106 +1,182 @@
+@use '../styles/breakpoints' as bp;
+
+// Shell chrome lives outside ProfilePageComponent; it picks up the active profile's
+// theme through the --c-* vars on body.theme-*, falling back to the neutral --g-* set.
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: calc(var(--z-nav) + 1);
+  padding: var(--space-2) var(--space-4);
+  background: var(--g-text);
+  color: var(--g-card);
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
+    outline: 3px solid var(--g-primary);
+    outline-offset: 2px;
+  }
+}
+
 .main-nav {
   position: sticky;
   top: 0;
-  z-index: 1000;
-  background: var(--g-bg);
-  border-bottom: 2px solid var(--g-border);
+  z-index: var(--z-nav);
+  height: var(--nav-h);
+  background: color-mix(in oklch, var(--c-bg, var(--g-bg)) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--c-border, var(--g-border));
 }
 
 .nav-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.85rem 2rem;
+  gap: var(--space-4);
+  height: 100%;
+  padding: 0 var(--space-6);
   max-width: 1280px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .logo {
-  font-family: var(--g-font-hero);
-  font-size: 1.35rem;
+  font-family: var(--font-hero, var(--g-font-hero));
+  font-size: 1.2rem;
   font-weight: 700;
   text-decoration: none;
-  color: var(--g-primary);
-  letter-spacing: -0.3px;
+  color: var(--c-text, var(--g-text));
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+
+  &:hover {
+    color: var(--c-primary, var(--g-primary));
+  }
 }
 
 .links {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--space-2);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--c-primary, var(--g-primary));
+  outline-offset: 3px;
+}
+
+// Two-option segmented control — the profile set is fixed at two by design.
+.profile-switch {
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--c-border, var(--g-border));
+  border-radius: var(--radius-pill);
+  background: var(--c-surface, var(--g-card));
 
   a {
-    font-family: var(--g-font-display);
-    font-size: 0.78rem;
-    font-weight: 600;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 var(--space-4);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body, var(--g-font-body));
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--c-muted, var(--g-muted));
     text-decoration: none;
-    color: var(--g-muted);
-    padding: 0.45rem 0.9rem;
-    border-radius: 2px;
-    border: 2px solid transparent;
-    transition: color 0.18s, border-color 0.18s, background 0.18s;
-    cursor: pointer;
+    transition: color var(--dur-fast), background var(--dur-fast);
 
     &:hover {
-      color: var(--g-primary);
-      border-color: var(--g-border);
+      color: var(--c-text, var(--g-text));
     }
 
     &.active {
-      color: var(--g-primary);
-      background: oklch(92% 0.08 278);
-      border-color: oklch(86% 0.12 278);
+      background: var(--c-text, var(--g-text));
+      color: var(--c-bg, var(--g-bg));
     }
+  }
+}
+
+.nav-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--c-muted, var(--g-muted));
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover,
+  &.active {
+    color: var(--c-text, var(--g-text));
+  }
+
+  &.active {
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
   }
 }
 
 .content-wrapper {
-  min-height: calc(100vh - 120px);
-  max-width: 1280px;
-  margin: 0 auto;
+  flex: 1;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .footer {
-  text-align: center;
-  padding: 1.5rem 2rem;
-  font-family: var(--g-font-display);
-  font-size: 0.72rem;
-  color: var(--g-muted);
-  border-top: 2px solid var(--g-border);
-  background: var(--g-bg);
-  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-6);
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--space-6);
+  box-sizing: border-box;
+  font-size: var(--text-sm);
+  color: var(--c-muted, var(--g-muted));
+  border-top: 1px solid var(--c-border, var(--g-border));
+
+  p {
+    margin: 0;
+  }
 }
 
-// ── .NET theme — shell chrome (header/footer live outside ProfilePageComponent,
-// so they pick up the theme via this host class instead of body.theme-dotnet) ──
-:host(.theme-dotnet) {
-  .main-nav {
-    background: #0b0b0b;
-    border-bottom-color: #1e1e1e;
+@media (max-width: bp.$bp-sm) {
+  .nav-container {
+    padding: 0 var(--space-4);
   }
 
   .logo {
-    color: #ffffff;
+    font-size: 1.05rem;
   }
 
-  .links a {
-    color: #999;
-
-    &:hover {
-      color: #6366f1;
-      border-color: #1e1e1e;
-    }
-
-    &.active {
-      color: #6366f1;
-      background: #1a1a2e;
-      border-color: #2a2a2a;
-    }
+  .profile-switch a {
+    padding: 0 var(--space-3);
   }
 
   .footer {
-    background: #0f0f0f;
-    border-top-color: #1e1e1e;
-    color: #999;
+    padding: var(--space-5) var(--space-4);
   }
 }

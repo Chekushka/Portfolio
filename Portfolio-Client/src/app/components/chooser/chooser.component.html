@@ -1,95 +1,50 @@
 <div class="chooser">
-  <!-- Unity Half -->
-  <div
-    class="half half-unity"
+  <h1 class="chooser-title">Two portfolios. Pick one.</h1>
+
+  <a
+    class="half theme-unity"
+    routerLink="/unity"
     [class.expanded]="hoveredSlug() === 'unity'"
     [class.shrunk]="hoveredSlug() === 'dotnet'"
     (mouseenter)="hoveredSlug.set('unity')"
     (mouseleave)="hoveredSlug.set(null)"
-    (click)="navigate('unity')"
-    (keydown.enter)="navigate('unity')"
-    (keydown.space)="navigate('unity')"
-    tabindex="0"
-    role="button"
-    aria-label="View Unity Developer profile"
   >
-    <div class="half-bg unity-bg" aria-hidden="true"></div>
-    <div class="half-content">
-      <div class="preview-panel preview-unity">
-        <div class="preview-grid" aria-hidden="true"></div>
-        <div class="preview-coin" aria-hidden="true">¢</div>
-
-        <div class="preview-header">
-          <div class="half-eyebrow">// GAME DEVELOPER</div>
-          <h2 class="half-name">{{ unityProfile()?.name || 'Serhii Chekun' }}</h2>
-          <p class="half-role">{{ unityProfile()?.role || 'Unity & Mobile' }}</p>
-        </div>
-
-        <div class="preview-tags" aria-hidden="true">
-          <span class="preview-tag tag-amber">UNITY</span>
-          <span class="preview-tag tag-indigo">C#</span>
-        </div>
-      </div>
-
-      <div class="half-cta">View Profile →</div>
+    <div class="half-inner">
+      <svg class="pixel-coin" viewBox="0 0 12 12" shape-rendering="crispEdges" aria-hidden="true">
+        <path fill="#f5c518" d="M4 0h4v1h2v1h1v1h1v6h-1v1h-1v1h-2v1H4v-1H2v-1H1V9H0V3h1V2h1V1h2z" />
+        <path fill="#fef08a" d="M2 1h2v1H2zM1 2h2v1H1zM0 3h2v1H0zM0 4h1v1H0z" />
+        <path fill="#c98c06" d="M5 3h2v6H5zM11 7h1v2h-1zM10 9h1v1h-1zM8 10h2v1H8z" />
+      </svg>
+      <p class="half-label">Unity · Mobile games</p>
+      <h2 class="half-title">Games</h2>
+      <p class="half-role">{{ unityProfile()?.role || 'Unity Mobile Game Developer' }}</p>
+      <ul class="half-tags" aria-label="Focus areas">
+        <li>Unity</li>
+        <li>Mobile</li>
+        <li>100K+ downloads</li>
+      </ul>
+      <span class="half-cta">See the games <span aria-hidden="true">→</span></span>
     </div>
-  </div>
+  </a>
 
-  <!-- Divider -->
-  <div class="divider" aria-hidden="true"></div>
-
-  <!-- .NET Half -->
-  <div
-    class="half half-dotnet"
+  <a
+    class="half theme-dotnet"
+    routerLink="/dotnet"
     [class.expanded]="hoveredSlug() === 'dotnet'"
     [class.shrunk]="hoveredSlug() === 'unity'"
     (mouseenter)="hoveredSlug.set('dotnet')"
     (mouseleave)="hoveredSlug.set(null)"
-    (click)="navigate('dotnet')"
-    (keydown.enter)="navigate('dotnet')"
-    (keydown.space)="navigate('dotnet')"
-    tabindex="0"
-    role="button"
-    aria-label="View .NET Developer profile"
   >
-    <div class="half-bg dotnet-bg" aria-hidden="true">
-      <span class="dp-sym s1">&#123;&#125;</span>
-      <span class="dp-sym s2">&lt;/&gt;</span>
-      <span class="dp-sym s3">[]</span>
-      <span class="dp-sym s4">=&gt;</span>
-      <span class="dp-sym s5">&lt;T&gt;</span>
+    <div class="half-inner">
+      <p class="half-label">ASP.NET Core · C#</p>
+      <h2 class="half-title">Backends</h2>
+      <p class="half-role">{{ dotnetProfile()?.role || '.NET Backend Developer' }}</p>
+      <ul class="half-tags" aria-label="Focus areas">
+        <li>ASP.NET Core</li>
+        <li>EF Core</li>
+        <li>REST APIs</li>
+      </ul>
+      <span class="half-cta">See the .NET work <span aria-hidden="true">→</span></span>
     </div>
-    <div class="half-content">
-      <div class="preview-panel preview-dotnet">
-        <div class="preview-code-syms" aria-hidden="true">
-          <span>{{ '{' }}</span>
-          <span>&lt;/&gt;</span>
-          <span>[]</span>
-        </div>
-
-        <div class="preview-header">
-          <div class="half-eyebrow dotnet-eyebrow">// .NET DEVELOPER</div>
-          <h2 class="half-name dotnet-name">{{ dotnetProfile()?.name || 'Serhii Chekun' }}</h2>
-          <p class="half-role dotnet-role">{{ dotnetProfile()?.role || 'ASP.NET Core & C#' }}</p>
-        </div>
-
-        <div class="preview-pseudo" aria-hidden="true">
-          <div class="preview-pseudo-line">
-            <span class="pp-kw">app</span>.MapGet(<span class="pp-str">"/api/profile"</span>, ...)
-          </div>
-          <div class="preview-pseudo-line">
-            services.AddDbContext&lt;<span class="pp-type">AppDbContext</span>&gt;()
-          </div>
-        </div>
-
-        <div class="preview-stats" aria-hidden="true">
-          <span>42 ENDPOINTS</span>
-          <span class="pp-dot">·</span>
-          <span>99.9% UPTIME</span>
-        </div>
-      </div>
-
-      <div class="half-cta dotnet-cta">View Profile →</div>
-    </div>
-  </div>
+  </a>
 </div>

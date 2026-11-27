@@ -104,8 +104,9 @@ both the tag form and contact-method form. Value type:
 ## Key Constraints
 
 - **Profiles are a fixed set of two** (seeded). Don't add create/delete-profile logic.
-- **`ThemeKey` is seed-only.** A new/changed theme = migration + a `body.theme-X` block in
-  `styles.scss`, not an admin action. Theming lives on `document.body` (base neutral +
+- **`ThemeKey` is seed-only.** A new/changed theme = migration + a `.theme-X` block of
+  `--c-*`/`--font-*` custom properties in `styles.scss`, not an admin action. Component
+  styles read those vars and never branch on theme. Theming lives on `document.body` (base neutral +
   `body.theme-unity`/`body.theme-dotnet`), not a `:host.theme-*` class on the component —
   `ProfilePageComponent` toggles `theme-<key>` on `document.body` via `Renderer2` once the
   profile resolves, and removes it in `ngOnDestroy`. Chooser/admin/login carry no theme
